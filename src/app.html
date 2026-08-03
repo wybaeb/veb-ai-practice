@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Практика с ИИ-агентом · Государство на скорости ИИ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#ff5533; --brand-soft:rgba(255,85,51,.13); --brand-line:rgba(255,85,51,.34);
+  --bg:#1e2027; --bg2:#23262e; --panel:#282b34; --panel2:#2f333d;
+  --ink:#fff; --ink2:rgba(255,255,255,.66); --ink3:rgba(255,255,255,.40); --line:rgba(255,255,255,.11);
+  --font:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+  --wrap:1080px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);
+  font-size:17px;line-height:1.6;letter-spacing:-.01em;-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+a{color:var(--brand);text-decoration:none}
+a:hover{text-decoration:underline}
+code{font-family:var(--mono);font-size:.87em;background:var(--panel);padding:2px 6px;border-radius:5px;color:#ffd0c5}
+
+/* ── шапка ─────────────────────────────────────────── */
+header{padding:74px 0 54px;background:
+  radial-gradient(1200px 620px at 84% -18%,rgba(255,85,51,.22),transparent 62%),
+  linear-gradient(180deg,#22252d,var(--bg));
+  border-bottom:1px solid var(--line)}
+.eyebrow{color:var(--brand);font-weight:800;font-size:13px;letter-spacing:.13em;text-transform:uppercase;margin-bottom:16px}
+h1{font-size:clamp(34px,5.2vw,58px);line-height:1.06;font-weight:800;margin:0 0 20px;max-width:16em}
+.lead{font-size:clamp(17px,2.1vw,21px);color:var(--ink2);max-width:44em;margin:0 0 28px}
+.meta{display:flex;flex-wrap:wrap;gap:10px}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:999px;
+  padding:7px 15px;font-size:13.5px;color:var(--ink2);font-weight:500}
+.chip b{color:var(--ink);font-weight:700}
+
+/* ── секции ────────────────────────────────────────── */
+section{padding:62px 0;border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+h2{font-size:clamp(25px,3.4vw,36px);font-weight:800;margin:0 0 10px;line-height:1.14}
+h2 .num{color:var(--brand);font-variant-numeric:tabular-nums;margin-right:.45em}
+.sub{color:var(--ink2);max-width:46em;margin:0 0 34px;font-size:17px}
+h3{font-size:20px;font-weight:800;margin:34px 0 12px}
+
+/* ── карточка для агента ───────────────────────────── */
+.agentbox{background:linear-gradient(135deg,rgba(255,85,51,.16),rgba(255,85,51,.05));
+  border:1px solid var(--brand-line);border-radius:20px;padding:30px 32px}
+.agentbox h3{margin:0 0 8px;font-size:23px}
+.agentbox p{color:var(--ink2);margin:0 0 20px;max-width:52em}
+.linkrow{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch;margin-bottom:14px}
+.linkrow .url{flex:1 1 380px;background:#171920;border:1px solid var(--line);border-radius:12px;
+  padding:13px 16px;font-family:var(--mono);font-size:13px;color:#ffd0c5;overflow-x:auto;white-space:nowrap;
+  display:flex;align-items:center}
+button.copy{background:var(--brand);color:#fff;border:0;border-radius:12px;padding:13px 22px;
+  font-family:var(--font);font-size:14.5px;font-weight:800;cursor:pointer;white-space:nowrap;transition:.15s}
+button.copy:hover{filter:brightness(1.08)}
+button.copy.done{background:#2c9e63}
+.msg{background:#171920;border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  font-size:15px;color:var(--ink2);position:relative}
+.msg b{color:var(--ink)}
+
+/* ── шаги ──────────────────────────────────────────── */
+.steps{display:flex;flex-direction:column;gap:12px}
+details.step{background:var(--bg2);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+details.step[open]{border-color:var(--brand-line);background:var(--panel)}
+details.step summary{list-style:none;cursor:pointer;padding:20px 24px;display:flex;gap:18px;align-items:flex-start}
+details.step summary::-webkit-details-marker{display:none}
+.stepno{flex:0 0 auto;width:38px;height:38px;border-radius:11px;background:var(--brand-soft);
+  color:var(--brand);font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center}
+details.step[open] .stepno{background:var(--brand);color:#fff}
+.stephead{flex:1 1 auto;min-width:0}
+.stephead .t{font-weight:800;font-size:18px;line-height:1.3}
+.stephead .s{color:var(--ink3);font-size:13.5px;margin-top:4px}
+.art{flex:0 0 auto;align-self:center;background:var(--brand-soft);color:var(--brand);
+  border-radius:999px;padding:5px 13px;font-size:12.5px;font-weight:800;letter-spacing:.03em}
+.art.none{background:transparent;color:var(--ink3);box-shadow:inset 0 0 0 1px var(--line)}
+.stepbody{padding:0 24px 24px 80px}
+.stepbody p{color:var(--ink2);margin:0 0 14px}
+.stepbody ul{margin:0 0 16px;padding-left:1.15em;color:var(--ink2)}
+.stepbody li{margin-bottom:7px}
+.stepbody li::marker{color:var(--brand)}
+.label{font-size:11.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin:20px 0 8px}
+pre.prompt{background:#15171d;border:1px solid var(--line);border-left:3px solid var(--brand);
+  border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 10px;
+  font-family:var(--mono);font-size:12.8px;line-height:1.62;color:#dfe3ec;white-space:pre-wrap}
+.promptwrap{position:relative}
+.promptwrap button.copy{position:absolute;top:12px;right:12px;padding:7px 14px;font-size:12.5px;border-radius:9px;opacity:.92}
+.done-when{background:var(--brand-soft);border-radius:11px;padding:13px 17px;font-size:14.5px;color:var(--ink)}
+.done-when b{color:var(--brand)}
+
+/* ── сетки и таблицы ───────────────────────────────── */
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:15px;padding:22px 24px}
+.card h4{margin:0 0 8px;font-size:17px;font-weight:800}
+.card p{margin:0;color:var(--ink2);font-size:15px}
+.card .tagline{color:var(--brand);font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:6px 0 8px}
+th{text-align:left;color:var(--ink3);font-size:12px;font-weight:800;letter-spacing:.09em;
+  text-transform:uppercase;padding:11px 14px;border-bottom:2px solid var(--brand)}
+td{padding:12px 14px;border-bottom:1px solid var(--line);color:var(--ink2);vertical-align:top}
+td b,td strong{color:var(--ink)}
+tbody tr:nth-child(even){background:rgba(255,255,255,.028)}
+.tblwrap{overflow-x:auto;border-radius:13px;border:1px solid var(--line);background:var(--bg2)}
+
+/* ── дерево артефактов ─────────────────────────────── */
+.tree{background:#15171d;border:1px solid var(--line);border-radius:15px;padding:24px 26px;overflow-x:auto}
+.tree pre{margin:0;font-family:var(--mono);font-size:13.5px;line-height:1.9;color:var(--ink2);white-space:pre}
+.tree pre b{color:var(--brand);font-weight:600}
+
+/* ── метки достоверности ───────────────────────────── */
+.tag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.07em;padding:3px 10px;border-radius:999px;vertical-align:middle}
+.tag.bench{background:var(--brand);color:#fff}
+.tag.analog{background:var(--brand-soft);color:var(--brand);box-shadow:inset 0 0 0 1px var(--brand-line)}
+.tag.hypo{background:transparent;color:var(--ink3);box-shadow:inset 0 0 0 1px var(--line)}
+
+/* ── врезки ────────────────────────────────────────── */
+.note{border-left:3px solid var(--brand);background:var(--brand-soft);border-radius:0 13px 13px 0;
+  padding:16px 20px;margin:20px 0;color:var(--ink);font-size:15.5px}
+.note b{color:var(--brand)}
+.warn{border-left-color:#f0b429;background:rgba(240,180,41,.11)}
+.warn b{color:#f0b429}
+
+/* ── иконки ────────────────────────────────────────── */
+.icons{display:flex;flex-wrap:wrap;gap:10px}
+.icons .i{width:56px;height:56px;border-radius:13px;background:var(--panel);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center}
+.icons .i svg{width:26px;height:26px}
+
+/* ── консоль ───────────────────────────────────────── */
+pre.console{background:#15171d;border:1px solid var(--line);border-radius:13px;padding:20px 22px;
+  overflow-x:auto;font-family:var(--mono);font-size:12.6px;line-height:1.65;color:#cfd5e0;margin:0}
+pre.console .ok{color:#5ed39a}
+pre.console .hi{color:var(--brand)}
+
+footer{padding:46px 0 60px;color:var(--ink3);font-size:14px}
+footer b{color:var(--ink2)}
+@media(max-width:640px){
+  .stepbody{padding-left:24px}
+  section{padding:46px 0}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">karpov.courses × ВЭБ.РФ · 6–7 августа 2026</div>
+    <h1>Практика с персональным ИИ-агентом</h1>
+    <p class="lead">За полтора дня одна ваша инициатива проходит путь от замысла до защищённой
+      заготовки: выбрана и описана, подкреплена практикой других, проверена на допустимость,
+      посчитана и собрана в презентацию. Всю чёрную работу делает агент — решения принимаете вы.</p>
+    <div class="meta">
+      <span class="chip"><b>11</b> шагов</span>
+      <span class="chip"><b>10</b> артефактов</span>
+      <span class="chip">агент в <b>MAX</b> или <b>Telegram</b></span>
+      <span class="chip">мини-группы по <b>4</b> человека</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════ 1. ЗАПУСК АГЕНТА ══════════════ -->
+<section id="start">
+  <div class="wrap">
+    <h2><span class="num">01</span>Запуск агента</h2>
+    <p class="sub">Агент не нужно настраивать. Он читает одну ссылку — и дальше знает всю программу:
+      порядок шагов, цель каждого, ожидаемый артефакт и правила работы с данными.</p>
+
+    <div class="agentbox">
+      <h3>Ссылка для вашего ИИ-агента</h3>
+      <p>Отправьте её агенту первым сообщением. В файле — полный фреймворк занятия:
+        пайплайн, промпты, шаблоны артефактов и границы работы с данными.</p>
+
+      <div class="linkrow">
+        <div class="url" id="agenturl">https://raw.githubusercontent.com/wybaeb/veb-ai-practice/main/AGENTS.md</div>
+        <button class="copy" data-copy="#agenturl">Скопировать ссылку</button>
+      </div>
+
+      <div class="msg" id="firstmsg">
+        <b>Готовое первое сообщение:</b><br>
+        Прочитай инструкцию по ссылке https://raw.githubusercontent.com/wybaeb/veb-ai-practice/main/AGENTS.md
+        и действуй по ней. Я участник интенсива «Государство на скорости ИИ», начинаем с Шага 0.
+      </div>
+      <div style="margin-top:10px"><button class="copy" data-copy="#firstmsg" data-plain="Прочитай инструкцию по ссылке https://raw.githubusercontent.com/wybaeb/veb-ai-practice/main/AGENTS.md и действуй по ней. Я участник интенсива «Государство на скорости ИИ», начинаем с Шага 0.">Скопировать сообщение</button></div>
+    </div>
+
+    <div class="note warn"><b>Правило программы.</b> Работаем на обезличенных учебных кейсах.
+      Служебные документы, персональные данные, коммерческая и служебная тайна в учебный контур
+      не передаются. Всё, что нужно для работы, можно рассказать словами: что за инициатива,
+      какая стадия, сколько людей, сколько времени, где затыкается. Агент обязан отказаться,
+      если вы пришлёте служебный материал, — это его штатное поведение, а не сбой.</div>
+  </div>
+</section>
+
+<!-- ══════════════ 2. КАК УСТРОЕНА РАБОТА ══════════════ -->
+<section id="how">
+  <div class="wrap">
+    <h2><span class="num">02</span>Как устроена работа</h2>
+    <p class="sub">Занятие идёт ритмом: короткая теория от ведущего — сразу практика со своим агентом.
+      Внутри практики повторяется один и тот же цикл.</p>
+
+    <div class="grid g3">
+      <div class="card"><div class="tagline">шаг 1</div><h4>Агент объявляет шаг</h4>
+        <p>Называет цель, что сейчас сделает и какой артефакт будет на выходе.</p></div>
+      <div class="card"><div class="tagline">шаг 2</div><h4>Выполняет работу</h4>
+        <p>Ищет, сопоставляет, считает — показывая ход, а не только результат.</p></div>
+      <div class="card"><div class="tagline">шаг 3</div><h4>Оформляет артефакт</h4>
+        <p>Готовый документ с именем и версией. Показывает целиком, а не пересказом.</p></div>
+      <div class="card"><div class="tagline">шаг 4</div><h4>Останавливается</h4>
+        <p>Ждёт вашего «утверждаем» или «правим». Без этого дальше не идёт.</p></div>
+      <div class="card"><div class="tagline">шаг 5</div><h4>Правит новой версией</h4>
+        <p>Старое не затирает: к предыдущей редакции всегда можно вернуться.</p></div>
+      <div class="card"><div class="tagline">шаг 6</div><h4>Помнит, где вы остановились</h4>
+        <p>Перерыв, обед, ночь между днями — контекст сохраняется.</p></div>
+    </div>
+
+    <h3>Маршрут: десять артефактов, каждый из предыдущих</h3>
+    <div class="tree"><pre><b>A1</b> Карта инициатив зоны ответственности          <span style="color:rgba(255,255,255,.34)">С3</span>
+ └─ <b>A2</b> Паспорт инициативы                          <span style="color:rgba(255,255,255,.34)">С6</span>
+     ├─ <b>A3</b> Обзор реализованных практик              <span style="color:rgba(255,255,255,.34)">С7</span>
+     │   └─ <b>A4</b> Коридор эффекта                      <span style="color:rgba(255,255,255,.34)">С7</span>
+     └─ <b>A5</b> Холст инициативы            ← A2 + A4    <span style="color:rgba(255,255,255,.34)">С9</span>
+         ├─ <b>A6</b> Заключение о допустимости            <span style="color:rgba(255,255,255,.34)">С11</span>
+         └─ <b>A7</b> Финансовая модель        ← A4 + A5   <span style="color:rgba(255,255,255,.34)">С11</span>
+             └─ <b>A8</b> Презентация          ← A2+A5+A6+A7 <span style="color:rgba(255,255,255,.34)">пауза</span>
+                 └─ <b>A9</b> Протокол перекрёстной экспертизы <span style="color:rgba(255,255,255,.34)">С12</span>
+                     └─ <b>A10</b> Дорожная карта на 12 месяцев <span style="color:rgba(255,255,255,.34)">после</span></pre></div>
+
+    <div class="note"><b>Почему это важно.</b> На защите каждая цифра прослеживается до источника:
+      она не сформулирована заново на слайде, а пришла из артефакта, у которого есть метка
+      достоверности. Именно это отличает решение, которое проходит правление, от презентации,
+      которая разваливается от первого уточняющего вопроса.</div>
+  </div>
+</section>
+
+<!-- ══════════════ 3. ФРЕЙМВОРК ══════════════ -->
+<section id="framework">
+  <div class="wrap">
+    <h2><span class="num">03</span>Рамка: бизнес-инициатива</h2>
+    <p class="sub">Предмет работы — ваша инициатива, а не «процесс, который дешевле всего
+      автоматизировать». ИИ здесь инструмент внутри инициативы, а не самоцель.</p>
+
+    <div class="grid g2">
+      <div class="card"><div class="tagline">тип 1</div><h4>Проектная и продуктовая</h4>
+        <p>Создаёт новое: инвестиционный проект, проект ГЧП, объект инфраструктуры,
+          механизм поддержки, новый продукт или сервис.</p></div>
+      <div class="card"><div class="tagline">тип 2</div><h4>Процессная</h4>
+        <p>Меняет существующее: сроки прохождения заявки, издержки подразделения,
+          качество экспертизы, скорость подготовки обоснований.</p></div>
+    </div>
+
+    <div class="note"><b>Ключевое правило.</b> Различается предмет, но не структура описания.
+      Оба типа описываются одним набором характеристик, проходят одни шаги и защищаются
+      по одной форме — поэтому в одной группе работают владелец инвестиционного направления
+      и руководитель, отвечающий за операционную эффективность.</div>
+
+    <h3>Четыре критерия отбора и один тест</h3>
+    <div class="tblwrap"><table>
+      <thead><tr><th>Критерий</th><th>Что означает</th><th>Как читать</th></tr></thead>
+      <tbody>
+        <tr><td><b>Значимость для повестки</b></td><td>инициатива попадает в приоритеты организации</td><td>чем выше, тем лучше</td></tr>
+        <tr><td><b>Доступность данных</b></td><td>сведения существуют в пригодном для работы виде</td><td>чем выше, тем лучше</td></tr>
+        <tr><td><b>Скорость результата</b></td><td>как быстро станет видно, работает или нет</td><td>чем быстрее, тем лучше</td></tr>
+        <tr><td><b>Цена ошибки</b></td><td>что произойдёт, если решение окажется неверным</td><td><b>чем ниже, тем лучше</b> для первой инициативы</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="note"><b>Тест на организационную готовность.</b> Если инициатива затрагивает зону,
+      в которой изменение будет воспринято как утрата профессиональной роли, первой она не берётся —
+      независимо от величины эффекта. Первый проект определяет отношение к ИИ на годы вперёд,
+      и проваливается он из-за людей, а не из-за технологии.</div>
+
+    <h3>Шкала автономности процессов L0–L5</h3>
+    <p class="sub" style="margin-bottom:16px">Отвечает не на вопрос «насколько мощная технология»,
+      а на вопрос «какая доля решений принимается без участия человека».</p>
+    <div class="tblwrap"><table>
+      <thead><tr><th>Уровень</th><th>Что происходит</th><th>Кто отвечает</th></tr></thead>
+      <tbody>
+        <tr><td><b>L0</b> Правила и роботизация</td><td>исполнение заранее описанной последовательности</td><td>человек</td></tr>
+        <tr><td><b>L1</b> ИИ-помощник</td><td>готовит проект документа, человек проверяет</td><td>человек</td></tr>
+        <tr><td><b>L2</b> База знаний (RAG)</td><td>отвечает по документам со ссылкой на пункт</td><td>человек</td></tr>
+        <tr><td><b>L3</b> Агент с интеграциями</td><td>обращается к системам, выполняет операции по регламенту</td><td>человек по регламенту</td></tr>
+        <tr><td><b>L4</b> Автономный агент</td><td>ведёт процесс целиком, человек — по исключениям</td><td>человек по исключениям</td></tr>
+        <tr><td><b>L5</b> Самоуправляемый процесс</td><td>работает без участия человека</td><td>надзор по метрикам</td></tr>
+      </tbody>
+    </table></div>
+    <div class="note"><b>Два правила.</b> Процесс находится на уровне своего <b>самого ручного шага</b>,
+      а не самого продвинутого. И подъём больше чем на два уровня за горизонт планирования
+      не планируется.</div>
+
+    <h3>Коридор достоверности</h3>
+    <p class="sub" style="margin-bottom:18px">Каждое число, которое выдаёт агент, помечено одной
+      из трёх категорий. Без исключений.</p>
+    <div class="grid g3">
+      <div class="card"><span class="tag bench">БЕНЧМАРК</span>
+        <p style="margin-top:12px">Подтверждено измерением в сопоставимой организации.
+          Есть ссылка, дата и понятно, кто и как измерял.</p></div>
+      <div class="card"><span class="tag analog">АНАЛОГ</span>
+        <p style="margin-top:12px">Перенос из смежной отрасли или похожего случая.
+          Указано, откуда переносим и чем случаи сопоставимы.</p></div>
+      <div class="card"><span class="tag hypo">ГИПОТЕЗА</span>
+        <p style="margin-top:12px">Оценка с погрешностью до 50 %. Основание указано одной строкой.
+          «Нет данных» — нормальный ответ.</p></div>
+    </div>
+    <div class="note"><b>Отдельное правило.</b> Заявленный в публикации эффект не равен
+      подтверждённому: пресс-релиз «сократили срок втрое» — это <span class="tag analog">АНАЛОГ</span>,
+      пока не видно методики измерения.</div>
+  </div>
+</section>
+
+<!-- ══════════════ 4. ШАГИ ══════════════ -->
+<section id="steps">
+  <div class="wrap">
+    <h2><span class="num">04</span>Одиннадцать шагов практики</h2>
+    <p class="sub">Разверните шаг, чтобы увидеть, что делает агент и какой промпт он выполняет.
+      Полные промпты — в файле <code>PIPELINE.md</code> репозитория.</p>
+
+    <div class="steps">
+
+      <details class="step" open>
+        <summary>
+          <div class="stepno">0</div>
+          <div class="stephead"><div class="t">Знакомство и пробное задание</div>
+            <div class="s">сессия С3 · активация агента</div></div>
+          <div class="art none">разогрев</div>
+        </summary>
+        <div class="stepbody">
+          <p>Агент знакомится с вашей зоной ответственности и сразу берёт задачу из вашего
+            предметного поля — ту, на которую в организации уходят дни. Смысл шага не в результате,
+            а в том, чтобы вы <b>сами</b> увидели разницу в скорости.</p>
+          <div class="label">ключевой промпт</div>
+          <div class="promptwrap">
+<pre class="prompt" id="p0">Предложи пробное задание из моей зоны ответственности — такое, на которое
+в организации обычно уходят дни. Дай 2–3 варианта на выбор. Условие: только
+открытые или обезличенные данные.
+
+Выполни выбранное ПОШАГОВО, показывая ход: что ищешь, что нашёл, чем один
+источник лучше другого. Результат оформи документом с таблицей и выводами.
+Каждое число помечай БЕНЧМАРК / АНАЛОГ / ГИПОТЕЗА.
+
+В конце спроси, сколько времени такая работа обычно занимает у нас и кого
+пришлось бы привлечь.</pre>
+            <button class="copy" data-copy="#p0">Копировать</button>
+          </div>
+          <div class="done-when"><b>Готово, когда:</b> задание выполнено с показанным ходом работы,
+            и вы назвали, сколько это обычно занимает.</div>
+        </div>
+      </details>
+
+      <details class="step">
+        <summary>
+          <div class="stepno">1</div>
+          <div class="stephead"><div class="t">Карта инициатив зоны ответственности</div>
+            <div class="s">сессия С3 · 4–6 инициатив с разметкой зрелости</div></div>
+          <div class="art">A1</div>
+        </summary>
+        <div class="stepbody">
+          <p>Вы перечисляете инициативы, которыми управляете. Агент размечает каждую: тип, стадия,
+            зрелость затрагиваемого процесса по Шкале L0–L5, целевой уровень на год и главное
+            ограничение подъёма.</p>
+          <ul>
+            <li>уровень определяется по <b>самому ручному</b> шагу процесса;</li>
+            <li>целевой уровень — не более чем на два выше текущего;</li>
+            <li>не знаете точных цифр — фиксируется порядок величины с меткой ГИПОТЕЗА.</li>
+          </ul>
+          <div class="label">ключевой промпт</div>
+          <div class="promptwrap">
+<pre class="prompt" id="p1">Собери карту моих инициатив. Спроси, чем я управляю: проектные и продуктовые
+(инвестпроект, ГЧП, объект инфраструктуры, механизм поддержки, продукт)
+и процессные (сроки, издержки, качество). Нужно 4–6 позиций.
+
+По каждой уточни: тип, стадия, какой процесс затрагивает, сколько людей,
+как часто, сколько занимает.
+
+Для затрагиваемого процесса определи уровень L0–L5, задав пять вопросов:
+кто принимает решение; что с нетиповым случаем; откуда берутся данные;
+кто отвечает за ошибку; как узнают о поломке. КЛАССИФИЦИРУЙ ПО САМОМУ
+РУЧНОМУ ШАГУ. Предложи целевой уровень на 12 месяцев, максимум +2,
+и назови главное ограничение: данные / люди / регламент / интеграции.
+
+Итог — таблица. Затем спроси, где я завысил оценку, а где занизил.</pre>
+            <button class="copy" data-copy="#p1">Копировать</button>
+          </div>
+          <div class="done-when"><b>Готово, когда:</b> в таблице 4–6 инициатив с типом, стадией,
+            текущим и целевым уровнем, и вы подтвердили разметку.</div>
+        </div>
+      </details>
+
+      <details class="step">
+        <summary>
+          <div class="stepno">2</div>
+          <div class="stephead"><div class="t">Выбор инициативы и паспорт</div>
+            <div class="s">сессия С6 · универсальный фреймворк</div></div>
+          <div class="art">A2</div>
+        </summary>
+        <div class="stepbody">
+          <p>Из карты выбирается одна инициатива — с ней мини-группа работает до конца программы.
+            Агент оценивает кандидатов по четырём критериям, прогоняет тест на организационную
+            готовность и собирает паспорт по единой структуре.</p>
+          <div class="label">ключевой промпт</div>
+          <div class="promptwrap">
+<pre class="prompt" id="p2">Оцени инициативы из карты по четырём критериям (1–5): значимость для повестки
+организации; доступность данных; скорость проверяемого результата; цена ошибки
+(НИЖЕ — лучше). Сведи в таблицу с комментарием по каждой строке.
+
+Прогони тест на организационную готовность: «Если завтра часть этой работы
+начнёт делать агент — почувствует ли кто-то, что у него забрали профессию?»
+Если ДА — инициатива не берётся первой, даже при большом эффекте.
+
+Предложи основную и запасную, обоснуй. Назови, кто должен стать союзником
+и чьё возражение наиболее вероятно.
+
+После подтверждения собери ПАСПОРТ: замысел и адресат (без слова «оптимизация»);
+тип; границы и владелец; стадия; метрики опережающие и запаздывающие;
+минимальный класс ИИ-решения и почему именно он; ожидаемый эффект в натуральных
+единицах с меткой достоверности; обоснование выбора и вывод теста.</pre>
+            <button class="copy" data-copy="#p2">Копировать</button>
+          </div>
+          <div class="done-when"><b>Готово, когда:</b> выбрана одна инициатива, паспорт заполнен
+            целиком, группа согласна с выбором.</div>
+        </div>
+      </details>
+
+      <details class="step">
+        <summary>
+          <div class="stepno">3</div>
+          <div class="stephead"><div class="t">Глубинное исследование: как это делали другие</div>
+            <div class="s">сессия С7 · агент ищет при вас, около 15 минут</div></div>
+          <div class="art">A3</div>
+        </summary>
+        <div class="stepbody">
+          <p>Вы задаёте периметр — какие организации считаем сопоставимыми, за какие годы смотрим,
+            что относим к данным, а что к допущениям. Агент планирует исследование, показывает план,
+            ведёт поиск на ваших глазах и собирает справку со ссылками.</p>
+          <div class="label">ключевой промпт</div>
+          <div class="promptwrap">
+<pre class="prompt" id="p3">Собери доказательную базу по нашей инициативе.
+
+Сначала согласуй периметр ВОПРОСАМИ: какие организации считаем сопоставимыми
+(институты развития, банки развития, крупные корпорации, зарубежная практика);
+за какие годы смотрим; что считаем данными, а что допущениями.
+
+Составь план из 4–6 пунктов и покажи его. Начинай только после «ок».
+
+Выполняй ПОШАГОВО, комментируя ход. По каждому найденному случаю зафиксируй:
+организация и страна, год; что именно сделано; какой результат достигнут и КАК
+измерялся; на чём инициатива буксовала; ссылка на источник.
+
+Размечай достоверность: БЕНЧМАРК — подтверждено измерением, видна методика;
+АНАЛОГ — перенос из смежного случая; ГИПОТЕЗА — оценка ±50 %. Заявленный
+в публикации эффект — это АНАЛОГ, а не БЕНЧМАРК.
+
+Отдельным разделом — «Чего найти не удалось». Пробелы не заполняй.</pre>
+            <button class="copy" data-copy="#p3">Копировать</button>
+          </div>
+          <div class="done-when"><b>Готово, когда:</b> в справке 3–7 случаев со ссылками, всё
+            размечено, честно указано, чего найти не удалось.</div>
+        </div>
+      </details>
+
+      <details class="step">
+        <summary>
+          <div class="stepno">4</div>
+          <div class="stephead"><div class="t">Коридор эффекта</div>
+            <div class="s">сессия С7 · минимум, типичное, максимум</div></div>
+          <div class="art">A4</div>
+        </summary>
+        <div class="stepbody">
+          <p>Из справки собирается диапазон по каждому эффекту, с источником на каждой границе.
+            Отдельно проверяется бюджетируемость: высвобожденные часы, которые никуда не деваются,
+            экономией не являются.</p>
+          <div class="label">ключевой промпт</div>
+          <div class="promptwrap">
+<pre class="prompt" id="p4">Построй коридор эффекта по собранной справке.
+
+Выпиши все встречающиеся эффекты. По каждому ответь, переносится ли он на нашу
+инициативу; если нет — назови причину и исключи.
+
+По переносимым построй коридор: МИНИМУМ (худший подтверждённый), ТИПИЧНОЕ
+(медиана), МАКСИМУМ (лучший подтверждённый). К КАЖДОЙ границе привяжи источник
+и метку достоверности.
+
+Переведи в натуральные единицы нашей инициативы, показав пересчёт формулой.
+
+Прогони каждый эффект через проверку на бюджетируемость: приведёт ли он
+к сокращению затрат, к появлению нового результата — или ни к чему.
+Высвобожденные часы, которые никуда не деваются, экономией НЕ являются.
+
+Явно отметь: в финансовую модель пойдёт МИНИМУМ коридора.</pre>
+            <button class="copy" data-copy="#p4">Копировать</button>
+          </div>
+          <div class="done-when"><b>Готово, когда:</b> у каждого эффекта три границы с источниками,
+            отмечена бюджетируемость, выделена консервативная граница.</div>
+        </div>
+      </details>
+
+      <details class="step">
+        <summary>
+          <div class="stepno">5</div>
+          <div class="stephead"><div class="t">Холст инициативы: девять полей</div>
+            <div class="s">сессия С9 · одна страница для правления и для исполнителя</div></div>
+          <div class="art">A5</div>
+        </summary>
+        <div class="stepbody">
+          <p>Агент ведёт по девяти полям <b>по одному</b>, останавливаясь после каждого. Содержание
+            принадлежит группе: агент предлагает формулировки, но не решает за вас.</p>
+          <div class="tblwrap"><table>
+            <thead><tr><th>#</th><th>Поле</th><th>#</th><th>Поле</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Замысел и адресат</td><td>6</td><td>Метрики: опережающие и запаздывающие</td></tr>
+              <tr><td>2</td><td>Проблема или возможность</td><td>7</td><td>Необходимые данные и инструменты</td></tr>
+              <tr><td>3</td><td>Предлагаемое решение</td><td>8</td><td>Пилотная проверка</td></tr>
+              <tr><td>4</td><td>Роль ИИ в нём</td><td>9</td><td>Шаги реализации и ресурсы</td></tr>
+              <tr><td>5</td><td>Ожидаемые выгоды</td><td></td><td></td></tr>
+            </tbody>
+          </table></div>
+          <div class="note"><b>Две ошибки, из-за которых холст не работает:</b> избыточный класс
+            решения в поле 4 и пустые поля 6 и 8. Защита без опережающих метрик и без числового
+            критерия пилота не даёт оснований для решения о продолжении.</div>
+          <div class="label">ключевой промпт</div>
+          <div class="promptwrap">
+<pre class="prompt" id="p5">Веди меня по холсту инициативы. По ОДНОМУ полю за раз, после каждого показывай
+формулировку и жди подтверждения. Предлагай варианты, но не решай за меня.
+
+Поля: 1) замысел и адресат — одно предложение, слово «оптимизация» запрещено;
+2) проблема или возможность — почему сейчас; 3) предлагаемое решение;
+4) роль ИИ — МИНИМАЛЬНЫЙ класс, закрывающий требование (ассистент / база знаний /
+агент с интеграциями / автономный агент), с обоснованием, почему меньшего мало,
+а большего избыточно; 5) ожидаемые выгоды из коридора эффекта, с метками;
+6) метрики раздельно — опережающие и запаздывающие, обе измеримы;
+7) необходимые данные и инструменты; 8) пилотная проверка: объём, срок
+и КРИТЕРИЙ «сработало / не сработало» ЧИСЛОМ; 9) шаги и ресурсы, трудозатраты
+диапазоном.
+
+Перед итогом проверь сам: не завышен ли класс решения; заполнены ли поля 6 и 8
+измеримо. Если нет — скажи прямо.</pre>
+            <button class="copy" data-copy="#p5">Копировать</button>
+          </div>
+          <div class="done-when"><b>Готово, когда:</b> девять полей заполнены, класс решения
+            обоснован, у пилота есть числовой критерий.</div>
+        </div>
+      </details>
+
+      <details class="step">
+        <summary>
+          <div class="stepno">6</div>
+          <div class="stephead"><div class="t">Заключение о допустимости</div>
+            <div class="s">сессия С11 · класс данных, контур, ответственность</div></div>
+          <div class="art">A6</div>
+        </summary>
+        <div class="stepbody">
+          <p>Определяется класс обрабатываемых данных и допустимый контур размещения, фиксируются
+            три обязательные строки и собирается чек-лист требований к договору.</p>
+          <div class="tblwrap"><table>
+            <thead><tr><th>Класс данных</th><th>Допустимый контур</th></tr></thead>
+            <tbody>
+              <tr><td>Открытые данные</td><td>любой контур, включая зарубежное облако</td></tr>
+              <tr><td>Персональные данные</td><td>облако на территории Российской Федерации</td></tr>
+              <tr><td>Биометрические ПДн</td><td>аттестованная облачная площадка</td></tr>
+              <tr><td>Коммерческая тайна</td><td>российское облако: изолированный контур либо отечественная модель</td></tr>
+              <tr><td><b>Служебная тайна, объекты КИИ</b></td><td><b>только аттестованный закрытый контур</b></td></tr>
+              <tr><td>Государственная тайна</td><td>сертифицированный контур организации</td></tr>
+            </tbody>
+          </table></div>
+          <p>Если классов несколько — требование определяется <b>самым строгим</b> из них.</p>
+          <div class="label">ключевой промпт</div>
+          <div class="promptwrap">
+<pre class="prompt" id="p6">Подготовь заключение о допустимости нашего решения. Ты НЕ даёшь юридическую
+квалификацию — ты готовишь материал для проверки юристом.
+
+Определи класс обрабатываемых данных по матрице уровней значимости. Если классов
+несколько — решение определяется САМЫМ СТРОГИМ.
+
+Выбери контур из пяти (открытое зарубежное облако / российское облако /
+изолированный контур провайдера / аттестованный закрытый контур / собственная
+инфраструктура), обоснуй и укажи, что меняется в стоимости владения.
+
+Зафиксируй три обязательные строки: на каких шагах участие человека обязательно;
+при каком признаке агент останавливается и зовёт человека; кто (роль) отвечает
+за ошибочное решение.
+
+Собери чек-лист к договору: критерии приёмки в измеримых величинах;
+неделегируемые функции заказчика; признаки состоятельной и несостоятельной
+заявки исполнителя; требования к передаче и удалению данных.
+
+Отдельным блоком — ВОПРОСЫ К ЮРИСТУ до запуска.</pre>
+            <button class="copy" data-copy="#p6">Копировать</button>
+          </div>
+          <div class="done-when"><b>Готово, когда:</b> класс данных и контур обоснованы,
+            три обязательные строки заполнены, чек-лист и вопросы к юристу собраны.</div>
+        </div>
+      </details>
+
+      <details class="step">
+        <summary>
+          <div class="stepno">7</div>
+          <div class="stephead"><div class="t">Финансовая модель и сценарный анализ</div>
+            <div class="s">сессия С11 · NPV, окупаемость, Монте-Карло</div></div>
+          <div class="art">A7</div>
+        </summary>
+        <div class="stepbody">
+          <p>Агент считает сам и показывает ход. Уровень детализации — такой, чтобы модель можно
+            было пересчитать прямо в ходе обсуждения на правлении: вы двигаете допущение, и сразу
+            видно, как меняется вывод.</p>
+          <ul>
+            <li>эффекты берутся по <b>консервативной</b> границе коридора;</li>
+            <li>сопровождение — отдельной строкой, 15–30 % стоимости внедрения в год;</li>
+            <li>небюджетируемые эффекты в модель не идут, но называются на защите.</li>
+          </ul>
+          <div class="label">ключевой промпт</div>
+          <div class="promptwrap">
+<pre class="prompt" id="p7">Собери финансовую модель инициативы на три года. Считай САМ и показывай ход:
+формулу, подстановку, результат. «Примерно» не годится.
+
+Собери реестр допущений [допущение | значение | ед. | метка | основание]:
+эффекты по МИНИМУМУ коридора; затраты на внедрение; СОПРОВОЖДЕНИЕ отдельной
+строкой 15–30 % в год; ставка дисконтирования (спроси, какая принята у нас).
+
+Посчитай денежный поток по годам, NPV и срок окупаемости.
+
+Сценарный анализ: консервативный, базовый, оптимистичный — таблицей.
+
+Монте-Карло: треугольное распределение по границам коридора, не менее 5000
+итераций. Покажи P10 / P50 / P90 по NPV и вероятность NPV > 0. Построй
+гистограмму распределения.
+
+Границы безубыточности: при каком значении каждого из 2–3 ключевых допущений
+NPV обращается в ноль. Сформулируй словами.
+
+Затем спроси, какое допущение я хочу подвигать, и пересчитай при нём.</pre>
+            <button class="copy" data-copy="#p7">Копировать</button>
+          </div>
+          <div class="label">как выглядит результат</div>
+<pre class="console">3. СЦЕНАРИИ
+сценарий                       NPV     окупаемость
+--------------------------------------------------
+консервативный         <span class="hi">-11.3 млн ₽</span>             нет
+базовый                <span class="ok">+13.9 млн ₽</span>          15 мес
+оптимистичный          <span class="ok">+58.7 млн ₽</span>           5 мес
+
+4. МОНТЕ-КАРЛО (5000 прогонов, треугольное распределение)
+  P10: +6.2 млн ₽    P50: +17.1 млн ₽    P90: +29.5 млн ₽
+  вероятность NPV &gt; 0: <span class="ok">99%</span>
+
+5. ГРАНИЦЫ БЕЗУБЫТОЧНОСТИ
+  инициатива перестаёт окупаться, если «часов_стало»
+  поднимается выше <span class="hi">46</span> ч/заявка</pre>
+          <p style="margin-top:14px;color:var(--ink3);font-size:14px">Учебный вымышленный кейс.
+            Готовый расчётный скрипт — <code>templates/finmodel.py</code>.</p>
+          <div class="done-when"><b>Готово, когда:</b> реестр допущений размечен, NPV и окупаемость
+            посчитаны с показанным ходом, есть три сценария, P10/P50/P90 и границы безубыточности.</div>
+        </div>
+      </details>
+
+      <details class="step">
+        <summary>
+          <div class="stepno">8</div>
+          <div class="stephead"><div class="t">Презентация защиты</div>
+            <div class="s">пауза перед защитой · агент собирает, пока вы пьёте кофе</div></div>
+          <div class="art">A8</div>
+        </summary>
+        <div class="stepbody">
+          <p>Шесть слайдов в технологии <b>MARP</b>: презентация пишется в markdown и собирается
+            в PDF. Всё берётся из утверждённых артефактов — ничего не формулируется заново,
+            поэтому каждая цифра прослеживается до источника.</p>
+          <div class="tblwrap"><table>
+            <thead><tr><th>#</th><th>Слайд</th><th>Откуда берётся</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Титул: инициатива, тип, автор, группа</td><td>A2</td></tr>
+              <tr><td>2</td><td>Замысел и адресат, почему сейчас</td><td>A5, поля 1–2</td></tr>
+              <tr><td>3</td><td>Решение и роль ИИ, минимальный класс</td><td>A5, поля 3–4</td></tr>
+              <tr><td>4</td><td>Эффект: коридор с метками, метрики</td><td>A4, A5 поле 6</td></tr>
+              <tr><td>5</td><td>Допустимость: данные, контур, ответственный</td><td>A6</td></tr>
+              <tr><td>6</td><td>Экономика и первый шаг</td><td>A7</td></tr>
+            </tbody>
+          </table></div>
+          <div class="label">ключевой промпт</div>
+          <div class="promptwrap">
+<pre class="prompt" id="p8">Собери презентацию защиты в MARP: deck.md с темой templates/theme.css.
+
+НА ВХОДЕ — только утверждённые артефакты: паспорт (A2), холст (A5), заключение
+о допустимости (A6), финмодель (A7). НИЧЕГО НЕ ПРИДУМЫВАЙ: если данных нет —
+поставь пометку «[нет данных: нужен …]» и скажи, чего не хватает.
+
+РОВНО ШЕСТЬ СЛАЙДОВ, защита три минуты:
+1) титул: инициатива, тип, Ф. И. О. и роль, состав группы;
+2) замысел и адресат одним предложением, почему сейчас;
+3) решение и роль ИИ: минимальный класс и строка, почему именно он;
+4) эффект: таблица коридора с метками, опережающая и запаздывающая метрики;
+5) допустимость: класс данных, контур, участие человека, порог отзыва
+   полномочий, ответственный;
+6) экономика и первый шаг: NPV, окупаемость, два сценария, вероятность NPV > 0,
+   действие до понедельника и кто о нём знает.
+
+Каждое число — с меткой достоверности и из артефакта. В notes каждого слайда —
+реплика на 30 секунд. Иконка не более одной на слайд. Не больше семи строк текста.
+
+Собери PDF: npx @marp-team/marp-cli deck.md -o deck.pdf
+Затем покажи ПРОВЕРКУ ПРОСЛЕЖИВАЕМОСТИ: [цифра на слайде | артефакт | метка].</pre>
+            <button class="copy" data-copy="#p8">Копировать</button>
+          </div>
+          <div class="done-when"><b>Готово, когда:</b> шесть слайдов собраны, у каждой цифры
+            есть источник и метка, реплики написаны.</div>
+        </div>
+      </details>
+
+      <details class="step">
+        <summary>
+          <div class="stepno">9</div>
+          <div class="stephead"><div class="t">Защита и перекрёстная экспертиза</div>
+            <div class="s">сессия С12 · разбор ведут сами участники</div></div>
+          <div class="art">A9</div>
+        </summary>
+        <div class="stepbody">
+          <p>Три минуты на группу. Замечания коллег агент фиксирует <b>в момент обсуждения</b>
+            и тут же показывает, как правка отражается на модели и на слайдах. Это и есть
+            демонстрация рабочего цикла: решение обсуждается и пересчитывается за минуты.</p>
+          <div class="label">ключевой промпт</div>
+          <div class="promptwrap">
+<pre class="prompt" id="p9">Веди протокол перекрёстной экспертизы во время защиты.
+
+По ходу обсуждения фиксируй каждое замечание: [кто высказал | к какому слайду
+относится | суть одной строкой]. Записывай нейтрально: не защищай инициативу
+и не соглашайся автоматически.
+
+После обсуждения раздели замечания на три группы: ПРИНИМАЕМ (что именно
+меняется); ПРИНИМАЕМ С ОГОВОРКОЙ (что и при каком условии); НЕ ПРИНИМАЕМ
+(почему, со ссылкой на данные или границы инициативы).
+
+По принятым, затрагивающим цифры, ПЕРЕСЧИТАЙ модель и покажи было/стало:
+насколько изменились NPV и окупаемость. Обнови слайды.
+
+Зафиксируй обязательство первой недели: конкретное проверяемое действие
+до следующего понедельника и роль, которая о нём знает. «Поговорить» не годится.</pre>
+            <button class="copy" data-copy="#p9">Копировать</button>
+          </div>
+          <div class="done-when"><b>Готово, когда:</b> замечания классифицированы, модель
+            пересчитана, слайды обновлены, обязательство первой недели записано.</div>
+        </div>
+      </details>
+
+      <details class="step">
+        <summary>
+          <div class="stepno">10</div>
+          <div class="stephead"><div class="t">Дорожная карта на 12 месяцев</div>
+            <div class="s">после программы · аудиторного времени не требует</div></div>
+          <div class="art">A10</div>
+        </summary>
+        <div class="stepbody">
+          <p>К концу программы все входные данные уже собраны, поэтому карту агент дособирает
+            после интенсива и присылает вам. Каждый этап заканчивается работающим результатом,
+            после каждого — точка принятия решения с числовым порогом.</p>
+          <div class="label">ключевой промпт</div>
+          <div class="promptwrap">
+<pre class="prompt" id="p10">Собери дорожную карту инициативы на 12 месяцев по холсту (A5), финмодели (A7)
+и протоколу экспертизы (A9).
+
+Разложи на 4–6 этапов по кварталам. КАЖДЫЙ ЭТАП ЗАКАНЧИВАЕТСЯ РАБОТАЮЩИМ
+РЕЗУЛЬТАТОМ, а не документом. Первый этап — пилот из холста, с тем же числовым
+критерием «сработало / не сработало».
+
+По каждому этапу: результат, срок, роли, ресурсы, трудозатраты диапазоном.
+После каждого — ТОЧКА РЕШЕНИЯ: по какому показателю и при каком пороге
+продолжаем, меняем подход или останавливаемся.
+
+Отдельно — до пяти рисков: что может остановить инициативу, признак наступления,
+что делать. Первый месяц распиши по неделям, начиная с обязательства первой недели.
+
+Заверши вопросом: вернёмся к пересчёту модели через месяц, когда будут первые
+данные пилота?</pre>
+            <button class="copy" data-copy="#p10">Копировать</button>
+          </div>
+          <div class="done-when"><b>Готово, когда:</b> этапы разложены с результатами и точками
+            решения, риски названы, первый месяц расписан по неделям.</div>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 5. ЗАГОТОВКИ ══════════════ -->
+<section id="kit">
+  <div class="wrap">
+    <h2><span class="num">05</span>Что лежит в наборе</h2>
+    <p class="sub">Агент читает эти файлы сам — скачивать ничего не нужно. Список приведён,
+      чтобы было понятно, из чего собран набор.</p>
+
+    <div class="tblwrap"><table>
+      <thead><tr><th>Файл</th><th>Что это</th></tr></thead>
+      <tbody>
+        <tr><td><code>AGENTS.md</code></td><td><b>Точка входа.</b> Полный фреймворк занятия: рамка инициативы, Шкала L0–L5, коридор достоверности, холст, уровни данных, экономика, правила поведения и границы</td></tr>
+        <tr><td><code>PIPELINE.md</code></td><td>Одиннадцать шагов: цель → артефакт → что делает агент → полный промпт → критерий готовности</td></tr>
+        <tr><td><code>CHECKLIST.md</code></td><td>Definition of Done агента и сценарий приёмки — инженерный документ</td></tr>
+        <tr><td><code>templates/initiative_passport.md</code></td><td>Паспорт инициативы <b>A2</b></td></tr>
+        <tr><td><code>templates/canvas.md</code></td><td>Холст инициативы <b>A5</b>, девять полей</td></tr>
+        <tr><td><code>templates/admissibility.md</code></td><td>Заключение о допустимости <b>A6</b></td></tr>
+        <tr><td><code>templates/finmodel.py</code></td><td>Финансовая модель <b>A7</b>: NPV, сценарии, Монте-Карло, безубыточность</td></tr>
+        <tr><td><code>templates/deck_template.md</code></td><td>Заготовка презентации <b>A8</b> — шесть слайдов MARP</td></tr>
+        <tr><td><code>templates/theme.css</code></td><td>Тема MARP. Бренд меняется правкой переменных в <code>:root</code></td></tr>
+        <tr><td><code>templates/deck_example.md</code></td><td>Пример заполненной защиты на учебном кейсе</td></tr>
+        <tr><td><code>icons/</code></td><td>36 брендовых иконок, SVG и PNG</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Иконки для презентации</h3>
+    <div class="icons" id="iconstrip"></div>
+    <p style="margin-top:14px;color:var(--ink3);font-size:14px">Правило: не более одной иконки
+      на слайд. Иконка обозначает тему слайда, а не украшает его.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><b>Интенсив «Государство на скорости ИИ»</b> · karpov.courses × ВЭБ.РФ · 6–7 августа 2026</p>
+    <p>Все примеры, кейсы и цифры на этой странице — учебные и вымышленные. Они показывают формат
+      работы, а не реальную аналитику.</p>
+  </div>
+</footer>
+
+<script>
+// ── копирование ────────────────────────────────────────────────
+document.querySelectorAll('button.copy').forEach(function(b){
+  b.addEventListener('click', function(){
+    var plain = b.getAttribute('data-plain');
+    var text = plain !== null ? plain
+             : document.querySelector(b.getAttribute('data-copy')).innerText.trim();
+    var done = function(){
+      var old = b.textContent;
+      b.textContent = 'Скопировано'; b.classList.add('done');
+      setTimeout(function(){ b.textContent = old; b.classList.remove('done'); }, 1600);
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done);
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch(e){}
+      document.body.removeChild(ta);
+    }
+  });
+});
+
+// ── лента иконок (встроенные контуры, без внешних запросов) ────
+var ICONS = {
+  target:'<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  layers:'<polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>',
+  search:'<circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>',
+  scale:'<path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7l-3 7h6z"/><path d="M19 7l-3 7h6z"/><path d="M8 21h8"/>',
+  calculator:'<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h4"/>',
+  shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  cpu:'<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4"/><path d="M15 2v4"/><path d="M9 18v4"/><path d="M15 18v4"/><path d="M2 9h4"/><path d="M2 15h4"/><path d="M18 9h4"/><path d="M18 15h4"/>',
+  users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/>',
+  clock:'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  flag:'<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>',
+  checkcircle:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+  lightbulb:'<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>',
+  database:'<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 5v6c0 1.66-4 3-9 3s-9-1.34-9-3V5"/><path d="M21 11v6c0 1.66-4 3-9 3s-9-1.34-9-3v-6"/>',
+  link:'<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
+  robot:'<rect x="5" y="9" width="14" height="11" rx="2"/><circle cx="9" cy="14" r="1.4"/><circle cx="15" cy="14" r="1.4"/><path d="M10 18h4"/><path d="M12 4v5"/><circle cx="12" cy="3" r="1.4"/><path d="M3 13h2"/><path d="M19 13h2"/>',
+  chart:'<path d="M3 3v18h18"/><polyline points="7 15 11 10 15 13 20 6"/>'
+};
+var strip = document.getElementById('iconstrip');
+Object.keys(ICONS).forEach(function(k){
+  var d = document.createElement('div'); d.className = 'i';
+  d.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#ff5533" stroke-width="2" '
+              + 'stroke-linecap="round" stroke-linejoin="round">' + ICONS[k] + '</svg>';
+  strip.appendChild(d);
+});
+</script>
+</body>
+</html>

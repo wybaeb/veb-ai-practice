@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+# Страж публичного репозитория: пропускает только то, что перечислено в PUBLIC_ONLY.md.
+# Установка:  git config core.hooksPath .githooks
+# Ручная проверка:  .githooks/pre-commit --dry-run   (проверяет рабочее дерево целиком)
+
+set -uo pipefail
+fail=0
+red()  { printf '\033[31m%s\033[0m\n' "$*"; }
+warn() { printf '\033[33m%s\033[0m\n' "$*"; }
+
+if [[ "${1:-}" == "--dry-run" ]]; then
+  mapfile -t FILES < <(git ls-files)
+else
+  mapfile -t FILES < <(git diff --cached --name-only --diff-filter=ACMR)
+fi
+
+# ── 1. Белый список путей ─────────────────────────────────────────────
+allowed() {
+  case "$1" in
+    AGENTS.md|PIPELINE.md|CHECKLIST.md|README.md|CLAUDE.md|PUBLIC_ONLY.md) return 0 ;;
+    build.py|index.html|.gitignore|.nojekyll)                              return 0 ;;
+    src/app.html)                                                          return 0 ;;
+    templates/*|icons/*|.githooks/*)                                       return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+# ── 2. Расширения, запрещённые всегда ─────────────────────────────────
+BAD_EXT='\.(docx|pptx|pdf|xlsx|xls|jsonl|bin|key|pem|env)$'
+
+# ── 3. Маркеры внутреннего контура и секретов ─────────────────────────
+# Файлы политики сами перечисляют эти строки — их содержимое не сканируем.
+POLICY='^(PUBLIC_ONLY\.md|CLAUDE\.md|\.githooks/pre-commit)$'
+MARKERS=(
+  '/root/work/veb_gov_ai'
+  '/root/work/veb-ai-agent'
+  'veb-gov-ai-program'
+  'docs.google.com/document'
+  'ВНУТРЕННЕЕ'
+  'не для распространения'
+  'ghp_'
+  'AIza'
+  'BEGIN [A-Z ]*PRIVATE KEY'
+  'Bearer [A-Za-z0-9._-]\{16,\}'
+  'sk-[A-Za-z0-9]\{20,\}'
+  'password[[:space:]]*=[[:space:]]*[^[:space:]]'
+)
+
+for f in "${FILES[@]}"; do
+  [[ -z "$f" ]] && continue
+
+  if ! allowed "$f"; then
+    red "✗ $f — файла нет в белом списке PUBLIC_ONLY.md"
+    fail=1
+    continue
+  fi
+
+  if [[ "$f" =~ $BAD_EXT ]]; then
+    red "✗ $f — расширение запрещено в публичном репозитории"
+    fail=1
+    continue
+  fi
+
+  [[ -f "$f" ]] || continue
+  [[ "$f" =~ $POLICY ]] && continue
+
+  for m in "${MARKERS[@]}"; do
+    if grep -qs "$m" "$f"; then
+      red "✗ $f — найден маркер внутреннего контура: «$m»"
+      fail=1
+    fi
+  done
+done
+
+if [[ $fail -ne 0 ]]; then
+  echo
+  warn "Коммит остановлен. Это публичный репозиторий: сюда идут только заготовки для учебных"
+  warn "агентов (см. PUBLIC_ONLY.md). Рабочие файлы проекта живут в приватных репозиториях."
+  warn "Флаг --no-verify не обходной путь, а способ опубликовать лишнее."
+  exit 1
+fi
+
+echo "✓ страж публичного репозитория: состав коммита допустим"
+exit 0

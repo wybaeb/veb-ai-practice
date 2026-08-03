@@ -1,0 +1,189 @@
+/* @theme initiative */
+/*
+ * Тема MARP для презентаций защиты инициатив.
+ * Интенсив «Государство на скорости ИИ» · karpov.courses × ВЭБ.РФ
+ *
+ * ─────────────────────────────────────────────────────────────────────
+ * СМЕНА БРЕНДА — ОДНА ПРАВКА.
+ * Все цвета и шрифт заданы переменными в :root ниже. Чтобы перевести
+ * презентацию в шаблон организации, поменяйте значения переменных —
+ * ничего больше в файле трогать не нужно.
+ * ─────────────────────────────────────────────────────────────────────
+ */
+
+@import 'default';
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap');
+
+:root {
+  /* фирменные константы */
+  --brand:        #ff5533;   /* акцент: заголовки, выделения, линии */
+  --brand-soft:   rgba(255, 85, 51, .14);
+  --bg:           #1e2027;   /* фон слайда */
+  --panel:        #262932;   /* подложка таблиц и врезок */
+  --ink:          #ffffff;   /* основной текст */
+  --ink-sec:      rgba(255, 255, 255, .62);
+  --ink-muted:    rgba(255, 255, 255, .34);
+  --line:         rgba(255, 255, 255, .12);
+  --font:         'Manrope', 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+  /* геометрия */
+  --pad:          64px;
+  --radius:       14px;
+}
+
+section {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 26px;
+  line-height: 1.45;
+  padding: var(--pad);
+  letter-spacing: -0.01em;
+}
+
+/* ── Заголовки ─────────────────────────────────────────────────────── */
+h1 {
+  color: var(--ink);
+  font-size: 58px;
+  font-weight: 800;
+  line-height: 1.08;
+  margin: 0 0 18px;
+}
+h1 strong { color: var(--brand); }
+
+h2 {
+  color: var(--brand);
+  font-size: 38px;
+  font-weight: 800;
+  margin: 0 0 6px;
+}
+
+h3 {
+  color: var(--ink-sec);
+  font-size: 22px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin: 0 0 24px;
+}
+
+/* акцентная черта под заголовком темы */
+h2::after {
+  content: '';
+  display: block;
+  width: 68px;
+  height: 4px;
+  background: var(--brand);
+  border-radius: 2px;
+  margin: 14px 0 22px;
+}
+
+/* ── Текст и списки ────────────────────────────────────────────────── */
+strong { color: var(--brand); font-weight: 800; }
+em     { color: var(--ink-sec); font-style: normal; }
+a      { color: var(--brand); text-decoration: none; }
+
+ul, ol { margin: 0; padding-left: 1.1em; }
+li { margin-bottom: 10px; }
+li::marker { color: var(--brand); }
+
+blockquote {
+  border-left: 4px solid var(--brand);
+  background: var(--brand-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 14px 22px;
+  margin: 18px 0;
+  font-size: .92em;
+  color: var(--ink);
+}
+
+/* ── Таблицы ───────────────────────────────────────────────────────── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .74em;
+  margin: 10px 0 4px;
+}
+th {
+  color: var(--ink-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-size: .86em;
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 2px solid var(--brand);
+}
+td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+tbody tr:nth-child(even) { background: var(--panel); }
+
+/* ── Метки достоверности ───────────────────────────────────────────── */
+/* Использование:  <span class="tag bench">БЕНЧМАРК</span>  */
+.tag {
+  display: inline-block;
+  font-size: .62em;
+  font-weight: 800;
+  letter-spacing: .06em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  vertical-align: middle;
+}
+.tag.bench { background: var(--brand); color: #fff; }
+.tag.analog { background: var(--brand-soft); color: var(--brand); box-shadow: inset 0 0 0 1px var(--brand); }
+.tag.hypo  { background: transparent; color: var(--ink-muted); box-shadow: inset 0 0 0 1px var(--line); }
+
+/* ── Врезка с ключевой цифрой ──────────────────────────────────────── */
+.kpi {
+  display: inline-block;
+  background: var(--panel);
+  border-radius: var(--radius);
+  padding: 18px 26px;
+  margin: 6px 12px 6px 0;
+  min-width: 200px;
+}
+.kpi b { display: block; color: var(--brand); font-size: 1.6em; line-height: 1.1; }
+.kpi span { color: var(--ink-muted); font-size: .68em; text-transform: uppercase; letter-spacing: .07em; }
+
+/* ── Титульный слайд:  <!-- _class: title --> ──────────────────────── */
+section.title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background:
+    radial-gradient(1100px 620px at 78% -12%, rgba(255, 85, 51, .20), transparent 62%),
+    var(--bg);
+}
+section.title h1 { font-size: 66px; }
+section.title h3 { color: var(--brand); margin-bottom: 34px; }
+section.title p  { color: var(--ink-sec); font-size: .82em; }
+
+/* ── Разделитель:  <!-- _class: section --> ────────────────────────── */
+section.section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--brand);
+}
+section.section h1 { color: #fff; }
+section.section h2 { color: rgba(255, 255, 255, .82); }
+section.section h2::after { background: rgba(255, 255, 255, .6); }
+
+/* ── Колонтитул и нумерация ────────────────────────────────────────── */
+footer, section::after {
+  color: var(--ink-muted);
+  font-size: 15px;
+}
+section::after { font-weight: 600; }
+
+/* ── Иконка темы слайда ────────────────────────────────────────────── */
+img[alt='icon'] {
+  display: block;
+  height: 46px;
+  width: auto;
+  margin-bottom: 16px;
+}
