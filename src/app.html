@@ -17,8 +17,10 @@
   --wrap:1080px;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);
+/* широкое содержимое (таблицы, схемы, промпты) прокручивается внутри своих
+   контейнеров — сама страница по горизонтали не едет никогда */
+html{scroll-behavior:smooth;overflow-x:clip}
+body{margin:0;overflow-x:clip;background:var(--bg);color:var(--ink);font-family:var(--font);
   font-size:17px;line-height:1.6;letter-spacing:-.01em;-webkit-font-smoothing:antialiased}
 .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
 a{color:var(--brand);text-decoration:none}
