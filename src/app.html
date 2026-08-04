@@ -909,7 +909,8 @@ NPV обращается в ноль. Сформулируй словами.
 реплика на 30 секунд. Иконка не более одной на слайд. Не больше семи строк текста.
 Таблицы — только markdown-разметкой, без <table> и инлайн-стилей.
 
-Собери PDF: npx @marp-team/marp-cli deck.md -o deck.pdf
+Проверь вёрстку: python3 templates/check_slides.py deck.md — если слайд назван,
+сократи формулировки (не кегль). Собери PDF: npx @marp-team/marp-cli deck.md -o deck.pdf
 Затем покажи ПРОВЕРКУ ПРОСЛЕЖИВАЕМОСТИ: [цифра на слайде | артефакт | метка].</pre>
             <button class="copy" data-copy="#p8">Копировать</button>
           </div>

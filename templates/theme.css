@@ -38,16 +38,25 @@ section {
   font-family: var(--font);
   font-size: 26px;
   line-height: 1.45;
-  padding: var(--pad);
+  /* Нижний отступ больше остальных — безопасная зона над колонтитулом:
+   * контент, дошедший до низа, не ложится на подпись бренда и номер
+   * страницы. Не уменьшать ниже 88px. */
+  padding: 56px var(--pad) 88px;
   letter-spacing: -0.01em;
 }
+
+p { margin: 0 0 14px; }
+p:last-child { margin-bottom: 0; }
 
 /* ── Заголовки ─────────────────────────────────────────────────────── */
 h1 {
   color: var(--ink);
-  font-size: 58px;
+  /* На контентных слайдах h1 — «главная мысль» (слайд «Видение»): 50px
+   * позволяет четыре строки без касания нижней трети кадра. Крупный титул
+   * задаётся отдельно в section.title. */
+  font-size: 50px;
   font-weight: 800;
-  line-height: 1.08;
+  line-height: 1.12;
   margin: 0 0 18px;
 }
 h1 strong { color: var(--brand); }
@@ -76,7 +85,7 @@ h2::after {
   height: 4px;
   background: var(--brand);
   border-radius: 2px;
-  margin: 14px 0 22px;
+  margin: 12px 0 18px;
 }
 
 /* ── Текст и списки ────────────────────────────────────────────────── */
@@ -164,8 +173,10 @@ table [style*="background"] { background: transparent !important; }
   background: var(--panel);
   border-radius: var(--radius);
   padding: 18px 26px;
-  margin: 6px 12px 6px 0;
+  /* нижний отступ держит ряд при переносе плиток на вторую строку */
+  margin: 6px 12px 14px 0;
   min-width: 200px;
+  vertical-align: top;
 }
 .kpi b { display: block; color: var(--brand); font-size: 1.6em; line-height: 1.1; }
 .kpi span { color: var(--ink-muted); font-size: .68em; text-transform: uppercase; letter-spacing: .07em; }
@@ -208,3 +219,22 @@ img[alt='icon'] {
   width: auto;
   margin-bottom: 16px;
 }
+
+/* ── Защита контентных картинок ────────────────────────────────────────
+ * Скриншоты и графики от генерации приходят любых размеров. Ограничение
+ * по высоте держит картинку в кадре вместе с подписью и первым шагом;
+ * одиночная картинка в абзаце центрируется. */
+img:not([alt='icon']) {
+  max-width: 100%;
+  max-height: 460px;
+  object-fit: contain;
+}
+p > img:not([alt='icon']):only-child {
+  display: block;
+  margin: 6px auto 10px;
+}
+
+/* ── Страховка от переполнения ─────────────────────────────────────────
+ * Если контента больше, чем помещается, лишнее мягко уходит за нижний
+ * край без наезда на колонтитул (колонтитул рисуется поверх). */
+footer, section::after { z-index: 3; }
