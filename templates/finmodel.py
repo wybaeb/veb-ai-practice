@@ -271,8 +271,61 @@ def построить_график(выборка, путь):
     print(f"\nГрафик сохранён: {путь}")
 
 
+def график_окупаемости(путь):
+    """График NPV для слайда: столбики потока по годам + линия накопленного
+    дисконтированного потока. Точка, где линия пересекает ноль, — окупаемость."""
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+    except ImportError:
+        print("\n[matplotlib не установлен — график пропущен]")
+        return
+    поток = денежный_поток()
+    ставка = значение("ставка")
+    диск = [cf / (1 + ставка) ** i for i, cf in enumerate(поток)]
+    накоп = np.cumsum(диск)
+    годы = list(range(len(поток)))
+
+    # график живёт на тёмном слайде: фон прозрачный, текст и оси светлые
+    свет, приглушено = "#ffffff", "#ffffffa0"
+    fig, ax = plt.subplots(figsize=(9.6, 4.0))
+    fig.patch.set_alpha(0)
+    ax.set_facecolor("none")
+    ax.bar(годы, np.array(поток) / 1_000_000, width=.55, color="#ff5533",
+           alpha=.9, label="денежный поток за год")
+    ax.plot(годы, накоп / 1_000_000, color=свет, marker="o",
+            linewidth=2, label="накопленный дисконтированный")
+    ax.axhline(0, color=приглушено, linewidth=1)
+    м = окупаемость_мес(поток)
+    if м is not None:
+        ax.annotate(f"окупаемость: {м} мес", xy=(м / 12, 0),
+                    xytext=(м / 12, float(min(накоп)) / 1_000_000 * .6),
+                    fontsize=10, ha="center", color=свет,
+                    arrowprops=dict(arrowstyle="->", color=свет))
+    ax.set_xticks(годы)
+    ax.set_xlabel("год", color=приглушено)
+    ax.set_ylabel("млн ₽", color=приглушено)
+    ax.set_title(f"NPV: когда инициатива окупается · {ИНИЦИАТИВА}",
+                 fontsize=11, color=свет)
+    ax.tick_params(colors=приглушено)
+    leg = ax.legend(frameon=False, fontsize=9)
+    for t in leg.get_texts():
+        t.set_color(свет)
+    for сторона in ("bottom", "left"):
+        ax.spines[сторона].set_color(приглушено)
+    ax.spines[["top", "right"]].set_visible(False)
+    fig.tight_layout()
+    fig.savefig(путь, dpi=150, transparent=True)
+    print(f"График окупаемости сохранён: {путь}")
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="Финансовая модель инициативы")
     ap.add_argument("--chart", metavar="PNG", help="сохранить гистограмму распределения NPV")
+    ap.add_argument("--chart-npv", metavar="PNG",
+                    help="сохранить график NPV/окупаемости (для слайда «График NPV»)")
     args = ap.parse_args()
     отчёт(args.chart)
+    if args.chart_npv:
+        график_окупаемости(args.chart_npv)
