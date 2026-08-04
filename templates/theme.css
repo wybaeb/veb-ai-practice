@@ -122,6 +122,27 @@ td {
 }
 tbody tr:nth-child(even) { background: var(--panel); }
 
+/* ── ФИЗИЧЕСКАЯ ЗАЩИТА ТАБЛИЦ ──────────────────────────────────────────
+ * Модели-генераторы регулярно вставляют таблицы с белым фоном: инлайн-стили
+ * (style="background:#fff"), bgcolor, класс из чужой темы. На тёмном слайде
+ * это ломает презентацию с первого прогона. Правила ниже перебивают ЛЮБОЙ
+ * такой стиль (!important сильнее инлайновых стилей без !important):
+ * фон ячеек прозрачный, границы светлые, текст светлый. Зебра из --panel
+ * задаётся здесь же, поэтому визуально ничего не теряется. Не ослаблять. */
+table, thead, tbody, tfoot, tr, th, td {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  color: var(--ink) !important;
+  border-color: var(--line) !important;
+}
+th { color: var(--ink-muted) !important; border-bottom-color: var(--brand) !important; }
+tbody tr:nth-child(even),
+tbody tr:nth-child(even) > td { background: var(--panel) !important; }
+table [style*="background"] { background: transparent !important; }
+/* примечание: правила выше не трогают span.tag внутри ячеек — метки
+   достоверности сохраняют свои фирменные заливки */
+
 /* ── Метки достоверности ───────────────────────────────────────────── */
 /* Использование:  <span class="tag bench">БЕНЧМАРК</span>  */
 .tag {
