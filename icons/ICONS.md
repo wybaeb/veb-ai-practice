@@ -17,7 +17,7 @@
 
 | Иконка | Ключ | Назначение |
 |---|---|---|
-| <img src="svg/target.svg" width="22"> | `target` | Замысел и цель |
+| <img src="svg/target.svg" width="22"> | `target` | Цель и фокус |
 | <img src="svg/compass.svg" width="22"> | `compass` | Исследование, поиск практик |
 | <img src="svg/briefcase.svg" width="22"> | `briefcase` | Инициатива, портфель |
 | <img src="svg/rocket.svg" width="22"> | `rocket` | Запуск, пилот |
