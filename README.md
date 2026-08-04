@@ -81,7 +81,7 @@ npx @marp-team/marp-cli templates/deck_template.md -o deck.pdf --theme templates
 
 ---
 
-⚠️ **Правила репозитория** — в [`PUBLIC_ONLY.md`](./PUBLIC_ONLY.md). Репозиторий публичный
+**Правила репозитория** — в [`PUBLIC_ONLY.md`](./PUBLIC_ONLY.md). Репозиторий публичный
 и предназначен только для передачи заготовок. Рабочие материалы проекта сюда не попадают;
 состав коммитов контролируется хуком `.githooks/pre-commit`.
 
