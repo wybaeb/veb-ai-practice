@@ -146,25 +146,45 @@ pre.prompt{background:#15171d;border:1px solid var(--line);border-left:3px solid
 .field{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:11px 13px}
 .field .n{color:var(--brand);font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
 .field .v{font-size:12.8px;color:var(--ink2);margin-top:4px;line-height:1.4}
-.deckgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
-.sl{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:11px 12px;
-  min-height:96px;display:flex;flex-direction:column;justify-content:space-between}
-.sl .n{color:var(--ink3);font-family:var(--mono);font-size:11px}
-.sl .t{font-size:13px;font-weight:700;color:var(--ink);line-height:1.28;margin-top:5px}
-.sl .src{color:var(--brand);font-size:10.5px;font-weight:800;letter-spacing:.06em;margin-top:8px}
+/* миниатюры слайдов: пропорции 16:9 и скелет содержимого, как на настоящем слайде */
+.deckgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.sl{aspect-ratio:16/9;background:#20232b;border:1px solid var(--line);border-radius:8px;
+  padding:9px 12px;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden}
+.sl::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--brand);opacity:.85}
+.sl .t{font-size:11px;font-weight:700;color:var(--ink);line-height:1.25}
+.sl .skl{flex:1;display:flex;flex-direction:column;gap:4px;justify-content:center;padding:0 2px}
+.sl .skl i{display:block;height:5px;border-radius:3px;background:rgba(255,255,255,.13)}
+.sl .skl i.a{background:rgba(255,85,51,.4)}
+.sl .skt{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:3px;align-content:center}
+.sl .skt i{height:8px;background:rgba(255,255,255,.09);border-radius:2px}
+.sl .skt i.h{background:rgba(255,85,51,.35)}
+.sl .skc{flex:1;display:flex;align-items:flex-end;gap:5px;padding:2px 12%}
+.sl .skc i{flex:1;background:rgba(255,85,51,.55);border-radius:2px 2px 0 0}
+.sl .skg{flex:1;display:flex;align-items:center;padding:0 4%}
+.sl .skg svg{width:100%;height:80%;display:block}
+.sl .f{display:flex;justify-content:space-between;align-items:baseline}
+.sl .n{color:var(--ink3);font-family:var(--mono);font-size:10px}
+.sl .src{color:var(--brand);font-size:10px;font-weight:800;letter-spacing:.06em}
 .verdicts{display:grid;gap:9px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
 .verdict{border-radius:11px;padding:12px 14px;background:var(--bg2);border:1px solid var(--line)}
 .verdict .h{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
 .verdict.yes .h{color:#5ed39a}.verdict.maybe .h{color:#f0b429}.verdict.no .h{color:var(--ink3)}
 .verdict p{margin:0;font-size:12.8px;color:var(--ink2);line-height:1.45}
-.gantt{display:flex;flex-direction:column;gap:9px}
-.gstage{display:flex;gap:13px;align-items:flex-start;background:var(--bg2);border:1px solid var(--line);
-  border-radius:11px;padding:11px 14px}
-.gstage .q{flex:0 0 auto;background:var(--brand-soft);color:var(--brand);border-radius:8px;
-  padding:4px 9px;font-size:11px;font-weight:800;letter-spacing:.05em}
-.gstage .txt{flex:1 1 auto;min-width:0;font-size:13px;color:var(--ink2);line-height:1.45}
-.gstage .txt b{color:var(--ink);display:block;font-size:13.5px;margin-bottom:3px}
-.gstage .txt em{font-style:normal;color:var(--ink3);font-size:12px}
+/* диаграмма Ганта дорожной карты */
+.gantt{display:grid;grid-template-columns:minmax(150px,190px) 1fr;gap:12px 14px;align-items:center;min-width:520px}
+.ganttwrap{overflow-x:auto;padding-bottom:2px}
+.gq{display:grid;grid-template-columns:repeat(4,1fr);font-size:10px;color:var(--ink3);
+  font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.gq span{text-align:center}
+.gl{font-size:12.5px;color:var(--ink);font-weight:700;line-height:1.3}
+.gl small{display:block;color:var(--ink3);font-weight:500;font-size:11px;margin-top:2px}
+.gtrack{position:relative;height:32px;background:var(--bg2);border-radius:8px;
+  background-image:linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:25% 100%;background-position:-1px 0}
+.gbar{position:absolute;top:6px;bottom:6px;background:linear-gradient(90deg,#ff5533,#ff7a5e);
+  border-radius:6px}
+.gdot{position:absolute;top:50%;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;background:#fff;
+  border:1.5px solid var(--brand);transform:rotate(45deg);border-radius:2px}
 
 /* ── сетки и таблицы ───────────────────────────────── */
 .grid{display:grid;gap:14px}
@@ -212,6 +232,40 @@ tbody tr:last-child td{border-bottom:0}
 td.neg{color:#ff8a70;white-space:nowrap}
 td.pos{color:#5ed39a;white-space:nowrap}
 
+/* ── имитация Excel-книги ──────────────────────────── */
+.xl{background:#f4f5f7;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.14)}
+.xl .fx{display:flex;align-items:center;gap:8px;background:#e9ebef;border-bottom:1px solid #d5d8de;
+  padding:7px 10px;font-family:var(--mono);font-size:11.5px;color:#333}
+.xl .fx .ref{background:#fff;border:1px solid #c9cdd4;border-radius:4px;padding:2px 9px;font-weight:600;color:#20232b}
+.xl .fx .fn{color:#8a8f9c;font-weight:600}
+.xl .fx .f{background:#fff;border:1px solid #c9cdd4;border-radius:4px;padding:2px 10px;flex:1;
+  overflow-x:auto;white-space:nowrap;color:#20232b}
+.xl .xg{overflow-x:auto}
+.xl table{width:100%;border-collapse:collapse;margin:0;font-size:12.5px}
+.xl th{background:#e9ebef;color:#5a6070;border:1px solid #d5d8de;font-size:10.5px;font-weight:700;
+  padding:3px 8px;text-align:center;letter-spacing:0;text-transform:none}
+.xl td{background:#fff;border:1px solid #e2e5ea;color:#3a3f4c;padding:4px 10px;white-space:nowrap}
+.xl td b{color:#20232b}
+.xl td.rh{background:#e9ebef;color:#5a6070;text-align:center;font-size:10.5px;font-weight:700;width:26px}
+.xl td.num{text-align:right;font-variant-numeric:tabular-nums}
+.xl td.sel{outline:2px solid var(--brand);outline-offset:-2px;background:#fff6f4}
+.xl tbody tr:nth-child(even){background:transparent}
+.xl .sheets{display:flex;background:#e9ebef;border-top:1px solid #d5d8de;font-size:11px;overflow-x:auto}
+.xl .sheets span{padding:6px 13px;border-right:1px solid #d5d8de;color:#5a6070;white-space:nowrap}
+.xl .sheets span.on{background:#fff;color:#20232b;font-weight:700;box-shadow:inset 0 2px 0 var(--brand)}
+
+/* ── QR в шапке ────────────────────────────────────── */
+.hero{display:flex;gap:38px;align-items:center}
+.hero-l{flex:1 1 auto;min-width:0}
+.qrcard{flex:0 0 216px;background:var(--panel);border:1px solid var(--brand-line);border-radius:18px;
+  padding:18px;display:flex;flex-direction:column;gap:11px;align-items:center;text-align:center}
+.qrimg{width:148px;height:148px;border-radius:10px;background:#fff;padding:6px;box-sizing:content-box}
+.qrt{font-size:12.5px;color:var(--ink2);line-height:1.45}
+.qrt b{display:block;color:var(--ink);font-size:14px;margin-bottom:3px}
+.qrcard .copy{width:100%;padding:10px 14px;font-size:13px}
+.qrl{font-family:var(--mono);font-size:10.5px;color:var(--ink3)}
+@media(max-width:820px){.hero{flex-direction:column;align-items:stretch}.qrcard{flex:1 1 auto}}
+
 footer{padding:46px 0 60px;color:var(--ink3);font-size:14px}
 footer b{color:var(--ink2)}
 @media(max-width:640px){
@@ -238,17 +292,27 @@ footer b{color:var(--ink2)}
 </svg>
 
 <header>
-  <div class="wrap">
-    <div class="eyebrow">karpov.courses × ВЭБ.РФ · 6–7 августа 2026</div>
-    <h1>Практика с персональным ИИ-агентом</h1>
-    <p class="lead">За полтора дня одна ваша инициатива проходит путь от замысла до защищённой
-      заготовки: выбрана и описана, подкреплена практикой других, проверена на допустимость,
-      посчитана и собрана в презентацию. Всю чёрную работу делает агент — решения принимаете вы.</p>
-    <div class="meta">
-      <span class="chip"><b>11</b> шагов</span>
-      <span class="chip"><b>10</b> артефактов</span>
-      <span class="chip">агент в <b>MAX</b> или <b>Telegram</b></span>
-      <span class="chip">мини-группы по <b>4</b> человека</span>
+  <div class="wrap hero">
+    <div class="hero-l">
+      <div class="eyebrow">karpov.courses × ВЭБ.РФ · 6–7 августа 2026</div>
+      <h1>Практика с персональным ИИ-агентом</h1>
+      <p class="lead">За полтора дня одна ваша инициатива проходит путь от замысла до защищённой
+        заготовки: выбрана и описана, подкреплена практикой других, проверена на допустимость,
+        посчитана и собрана в презентацию. Всю чёрную работу делает агент — решения принимаете вы.</p>
+      <div class="meta">
+        <span class="chip"><b>11</b> шагов</span>
+        <span class="chip"><b>10</b> артефактов</span>
+        <span class="chip">агент в <b>MAX</b> или <b>Telegram</b></span>
+        <span class="chip">мини-группы по <b>4</b> человека</span>
+      </div>
+    </div>
+    <div class="qrcard">
+      <img class="qrimg" alt="QR-код: инструкция для агента"
+        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2AQAAAADNaUdlAAACUElEQVR4nO2ZwY0rRwxEX6sH0JGTwQ+Fk5nxQ3IGrVA2A+q4AIXygS0Bvmi/bcA7DXxiTsODSpzqYpHdxLt4XN6m4Xf+v+VRAPTwrpGAjS6BA+D53fh+Ab9L6hoKl4aCHvV3pDg//gvQ2gE8dtpO23ns/vljcG/bSfC9DYWD90AaiWNKGz28vsIS9a94tAMb+jg2+Nz//9//d/kNEGzQY9+MZn86t6vYTNy/H98/0J+/P8Aa+lMR9ADogcKx+XoB/OEKBxIwdY00SaNSi+AncXCFJy4NcAXYEvWna2Bjtq0gTdhIU1+APxfwBAWPHewnNq4fRw+u9eYE+N5HmYceLok6BXhCuaDT1x8FPSbzAWmkqfi/hv5odA1wcEw9PPG08qJL4Jemc1aXXsypZwX8o4djgymh9PC0UqQV8JfztDrCg2peNhSeC/Dngqm1Pzb4/DHaTnJ7tCMBuMYZ8H0Rinlae3jBTjxNkhY6v8X55/w4ibRC/0U1+QblHMq/JSS+jP7PFgagIG1gU0gXwB90jRd5sPHsCL4C/kuV+vpxAJsJ2O7HBlf9fLTjBPi+iNo/lHlTeMLT/y9RfyTV2kSSXkbOJK2iP0pT2qhGXFpa68RV/EPiz8lrlOwoWMe/zf2Dgmk+bRJpBf2/cG+ttQ0202aCW97bVoutU+D7Il7757TZecGf7ez8/LlQ++fS/I+jhytuya3tp8H3Nub+WZpdwPSaaBbRn8I/L19KgqTRV9H/yf/XnRGYqvhr+P8A6FM8h2JONDURnx5/+31/+q35vwCL0h4wPQv0/wAAAABJRU5ErkJggg==">
+      <div class="qrt"><b>Ссылка для агента</b>наведите камеру — или скопируйте и отправьте
+        своему агенту первым сообщением. Подойдёт и выданному, и вашему собственному.</div>
+      <button class="copy" data-plain="https://raw.githubusercontent.com/wybaeb/veb-ai-practice/main/AGENTS.md">Скопировать ссылку</button>
+      <a class="qrl" href="https://github.com/wybaeb/veb-ai-practice" target="_blank" rel="noopener">github.com/wybaeb/veb-ai-practice</a>
     </div>
   </div>
 </header>
@@ -1029,8 +1093,28 @@ NPV обращается в ноль. Сформулируй словами.
 
           <div class="label">как выглядит артефакт</div>
           <div class="artifact">
-            <div class="bar"><i></i><b>A7 · Финансовая модель</b> · сценарии и Монте-Карло</div>
+            <div class="bar"><i></i><b>A7 · Финансовая модель</b> · finmodel.xlsx + вывод расчёта</div>
             <div class="doc">
+              <div class="xl">
+                <div class="fx"><span class="ref">B6</span><span class="fn">fx</span>
+                  <span class="f">=СУММ(B3:B5) + B2</span></div>
+                <div class="xg"><table>
+                  <thead><tr><th></th><th>A</th><th>B</th></tr></thead>
+                  <tbody>
+                    <tr><td class="rh">1</td><td><b>Показатель</b></td><td class="num"><b>Значение, ₽</b></td></tr>
+                    <tr><td class="rh">2</td><td>Внедрение (год 0)</td><td class="num">−12 500 000</td></tr>
+                    <tr><td class="rh">3</td><td>Дисконтированный поток, год 1</td><td class="num">5 400 000</td></tr>
+                    <tr><td class="rh">4</td><td>Дисконтированный поток, год 2</td><td class="num">7 200 000</td></tr>
+                    <tr><td class="rh">5</td><td>Дисконтированный поток, год 3</td><td class="num">6 000 000</td></tr>
+                    <tr><td class="rh">6</td><td><b>NPV</b></td><td class="num sel"><b>+6 100 000</b></td></tr>
+                  </tbody>
+                </table></div>
+                <div class="sheets"><span>Константы</span><span>Гипотезы</span><span>Бенчмарки</span><span class="on">Модель</span><span>График NPV</span></div>
+              </div>
+              <p class="cap2"><b>Чисел руками в книге нет.</b> Выделенная ячейка NPV считается
+                формулой от листов «Константы» и «Гипотезы»: двигаете допущение —
+                модель пересчитывается прямо в ячейках.</p>
+              <div class="label" style="margin-top:18px">и вывод расчёта в чате</div>
               <div class="tblwrap"><table>
                 <thead><tr><th>Сценарий</th><th>NPV</th><th>Окупаемость</th></tr></thead>
                 <tbody>
@@ -1134,33 +1218,35 @@ npx @marp-team/marp-cli deck.md -o deck.pdf --theme templates/theme.css
             <div class="bar"><i></i><b>A8 · Презентация защиты</b> · deck.pdf, 9 слайдов</div>
             <div class="doc">
               <div class="deckgrid">
-                <div class="sl"><div><div class="n">01</div>
-                  <div class="t">Титул: инициатива, этап «концепция», автор, группа</div></div>
-                  <div class="src">из A2</div></div>
-                <div class="sl"><div><div class="n">02</div>
-                  <div class="t">Видение: для кого · потребность · отличие</div></div>
-                  <div class="src">из A5, поля 1–2</div></div>
-                <div class="sl"><div><div class="n">03</div>
-                  <div class="t">Решение и роль ИИ: минимальный класс</div></div>
-                  <div class="src">из A5, поля 3–4</div></div>
-                <div class="sl"><div><div class="n">04</div>
-                  <div class="t">Гипотеза, эффект и риски: коридор с метками</div></div>
-                  <div class="src">из A4 и A5</div></div>
-                <div class="sl"><div><div class="n">05</div>
-                  <div class="t">Допустимость: данные, контур, ответственный</div></div>
-                  <div class="src">из A6</div></div>
-                <div class="sl"><div><div class="n">06</div>
-                  <div class="t">Ключевые фазы с точками решения</div></div>
-                  <div class="src">из A5, поля 8–9</div></div>
-                <div class="sl"><div><div class="n">07</div>
-                  <div class="t">Ресурсы: роли, трудозатраты, закупки</div></div>
-                  <div class="src">из A5 и A7</div></div>
-                <div class="sl"><div><div class="n">08</div>
-                  <div class="t">Инвестиционные показатели и сценарии</div></div>
-                  <div class="src">из A7 (finmodel.xlsx)</div></div>
-                <div class="sl"><div><div class="n">09</div>
-                  <div class="t">График NPV и первый шаг</div></div>
-                  <div class="src">из A7 (--chart-npv)</div></div>
+                <div class="sl"><div class="t">Титул: инициатива, этап «концепция», автор</div>
+                  <div class="skl"><i class="a" style="width:72%"></i><i style="width:46%"></i><i style="width:34%"></i></div>
+                  <div class="f"><span class="n">01</span><span class="src">из A2</span></div></div>
+                <div class="sl"><div class="t">Видение: для кого · потребность · отличие</div>
+                  <div class="skl"><i style="width:88%"></i><i style="width:80%"></i><i class="a" style="width:56%"></i></div>
+                  <div class="f"><span class="n">02</span><span class="src">из A5, поля 1–2</span></div></div>
+                <div class="sl"><div class="t">Решение и роль ИИ: минимальный класс</div>
+                  <div class="skl"><i style="width:64%"></i><i class="a" style="width:78%"></i><i style="width:42%"></i></div>
+                  <div class="f"><span class="n">03</span><span class="src">из A5, поля 3–4</span></div></div>
+                <div class="sl"><div class="t">Гипотеза, эффект и риски: коридор с метками</div>
+                  <div class="skt"><i class="h"></i><i class="h"></i><i class="h"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                  <div class="f"><span class="n">04</span><span class="src">из A4 и A5</span></div></div>
+                <div class="sl"><div class="t">Допустимость: данные, контур, ответственный</div>
+                  <div class="skl"><i style="width:52%"></i><i style="width:76%"></i><i style="width:60%"></i></div>
+                  <div class="f"><span class="n">05</span><span class="src">из A6</span></div></div>
+                <div class="sl"><div class="t">Ключевые фазы с точками решения</div>
+                  <div class="skl"><i class="a" style="width:30%"></i><i class="a" style="width:52%;margin-left:14%"></i><i class="a" style="width:44%;margin-left:38%"></i></div>
+                  <div class="f"><span class="n">06</span><span class="src">из A5, поля 8–9</span></div></div>
+                <div class="sl"><div class="t">Ресурсы: роли, трудозатраты, закупки</div>
+                  <div class="skl"><i style="width:70%"></i><i style="width:58%"></i><i style="width:66%"></i></div>
+                  <div class="f"><span class="n">07</span><span class="src">из A5 и A7</span></div></div>
+                <div class="sl"><div class="t">Инвестиционные показатели и сценарии</div>
+                  <div class="skc"><i style="height:30%"></i><i style="height:55%"></i><i style="height:80%"></i><i style="height:44%"></i></div>
+                  <div class="f"><span class="n">08</span><span class="src">из A7 (finmodel.xlsx)</span></div></div>
+                <div class="sl"><div class="t">График NPV и первый шаг</div>
+                  <div class="skg"><svg viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+                    <polyline points="2,30 30,26 58,14 96,4" fill="none" stroke="#ff5533" stroke-width="2.4" stroke-linecap="round"/>
+                    <line x1="2" y1="22" x2="98" y2="22" stroke="rgba(255,255,255,.18)" stroke-width="1"/></svg></div>
+                  <div class="f"><span class="n">09</span><span class="src">из A7 (--chart-npv)</span></div></div>
               </div>
               <p class="cap2"><b>Проверка прослеживаемости.</b> Последним действием агент выводит
                 таблицу «цифра на слайде → артефакт → метка достоверности». Если строка не сходится,
@@ -1260,14 +1346,15 @@ npx @marp-team/marp-cli deck.md -o deck.pdf --theme templates/theme.css
         <div class="stepbody">
           <p>К концу программы все входные данные уже собраны, поэтому карту агент дособирает
             после интенсива и присылает вам. Каждый этап заканчивается работающим результатом,
-            после каждого — точка принятия решения с числовым порогом.</p>
+            после каждого — точка принятия решения с числовым порогом. Карта визуализируется
+            диаграммой Ганта.</p>
           <div class="io">
             <div class="iobox"><div class="k">на входе</div>
               <div class="v"><span class="ac">A5</span> холст · <span class="ac">A7</span> финмодель ·
                 <span class="ac">A9</span> протокол — с обязательством первой недели</div></div>
             <div class="ioarr"><svg aria-hidden="true"><use href="#ic-arrow"/></svg></div>
             <div class="iobox out"><div class="k">на выходе</div>
-              <div class="v"><span class="ac">A10</span> <b>Дорожная карта</b> — 4–6 этапов
+              <div class="v"><span class="ac">A10</span> <b>Дорожная карта</b> — диаграмма Ганта
                 с точками решения, риски, первый месяц по неделям</div></div>
           </div>
           <div class="label">промпт</div>
@@ -1287,6 +1374,11 @@ npx @marp-team/marp-cli deck.md -o deck.pdf --theme templates/theme.css
 Отдельно — до пяти рисков: что может остановить инициативу, признак наступления,
 что делать. Первый месяц распиши по неделям, начиная с обязательства первой недели.
 
+В конце собери диаграмму Ганта по этапам с точками решения:
+python3 templates/roadmap.py -o roadmap_gantt.png — впиши свои этапы в блок
+ЭТАПЫ шаблона (репозиторий github.com/wybaeb/veb-ai-practice). Если исполнения
+кода у тебя нет — запуск не имитируй: выдай блок mermaid gantt, я отрендерю сам.
+
 Заверши вопросом: вернёмся к пересчёту модели через месяц, когда будут первые
 данные пилота?</pre>
             <button class="copy" data-copy="#p10">Копировать</button>
@@ -1294,27 +1386,31 @@ npx @marp-team/marp-cli deck.md -o deck.pdf --theme templates/theme.css
 
           <div class="label">как выглядит артефакт</div>
           <div class="artifact">
-            <div class="bar"><i></i><b>A10 · Дорожная карта</b> · 4 этапа, 4 точки решения</div>
+            <div class="bar"><i></i><b>A10 · Дорожная карта</b> · диаграмма Ганта, 4 точки решения</div>
             <div class="doc">
-              <div class="gantt">
-                <div class="gstage"><div class="q">I кв</div><div class="txt">
-                  <b>Пилот на 90 заявках работает</b>
-                  2 эксперта по 4 ч/нед, 120–180 чел.-ч.
-                  <em>Точка решения: полных пакетов ≥ 70 % — идём дальше; 55–70 % — меняем подход
-                    к проверке; ниже 55 % — останавливаемся.</em></div></div>
-                <div class="gstage"><div class="q">II кв</div><div class="txt">
-                  <b>База знаний покрывает весь регламент</b>
-                  подключены типовые заключения за 2 года.
-                  <em>Точка решения: доля ответов со ссылкой на пункт ≥ 90 %.</em></div></div>
-                <div class="gstage"><div class="q">III кв</div><div class="txt">
-                  <b>Экспертиза идёт в новом порядке во всей дирекции</b>
-                  регламент обновлён, роли закреплены.
-                  <em>Точка решения: срок заявки ≤ 34 дн на выборке квартала.</em></div></div>
-                <div class="gstage"><div class="q">IV кв</div><div class="txt">
-                  <b>Эффект подтверждён на годовой выборке</b>
-                  модель пересчитана по фактическим данным.
-                  <em>Точка решения: тиражируем на смежные процессы или фиксируем как есть.</em></div></div>
-              </div>
+              <div class="ganttwrap"><div class="gantt">
+                <div></div>
+                <div class="gq"><span>I кв</span><span>II кв</span><span>III кв</span><span>IV кв</span></div>
+                <div class="gl">Пилот на 90 заявках работает
+                  <small>2 эксперта по 4 ч/нед · 120–180 чел.-ч</small></div>
+                <div class="gtrack"><div class="gbar" style="left:1%;width:22.5%"></div>
+                  <span class="gdot" style="left:25%" title="полных пакетов ≥ 70 %"></span></div>
+                <div class="gl">База знаний покрывает весь регламент
+                  <small>типовые заключения за 2 года</small></div>
+                <div class="gtrack"><div class="gbar" style="left:26.5%;width:22%"></div>
+                  <span class="gdot" style="left:50%" title="ответы со ссылкой на пункт ≥ 90 %"></span></div>
+                <div class="gl">Новый порядок во всей дирекции
+                  <small>регламент обновлён, роли закреплены</small></div>
+                <div class="gtrack"><div class="gbar" style="left:51.5%;width:22%"></div>
+                  <span class="gdot" style="left:75%" title="срок заявки ≤ 34 дн"></span></div>
+                <div class="gl">Эффект подтверждён на годовой выборке
+                  <small>модель пересчитана по фактам</small></div>
+                <div class="gtrack"><div class="gbar" style="left:76.5%;width:22%"></div>
+                  <span class="gdot" style="left:99.5%" title="тираж или фиксация"></span></div>
+              </div></div>
+              <p class="cap2"><b>◆ — точки решения с порогом числом:</b> полных пакетов ≥ 70 % —
+                идём дальше · ответы со ссылкой на пункт ≥ 90 % · срок заявки ≤ 34 дн на выборке
+                квартала · тиражируем на смежные процессы или фиксируем как есть.</p>
               <p class="cap2"><b>Плюс к этому:</b> до пяти рисков с признаком наступления и ответом
                 на каждый, и первый месяц по неделям — начиная с того самого обязательства,
                 которое вы взяли на защите.</p>
@@ -1322,7 +1418,8 @@ npx @marp-team/marp-cli deck.md -o deck.pdf --theme templates/theme.css
           </div>
 
           <div class="done-when" style="margin-top:16px"><b>Готово, когда:</b> этапы разложены
-            с результатами и точками решения, риски названы, первый месяц расписан по неделям.</div>
+            с результатами и точками решения, собрана диаграмма Ганта, риски названы,
+            первый месяц расписан по неделям.</div>
         </div>
       </details>
 
