@@ -110,8 +110,15 @@ async function attempt(pw,fromCache){{
 }}
 document.getElementById("go").onclick=()=>attempt(document.getElementById("pw").value,false);
 document.getElementById("pw").addEventListener("keydown",e=>{{if(e.key==="Enter")attempt(e.target.value,false);}});
-const cached=localStorage.getItem(KEY);
-if(cached) attempt(cached,true);
+// Авто-вход по фрагменту #k=<пароль> — для QR на раздатке (ORG01, 05.08.2026).
+// Фрагмент не покидает браузер (не попадает ни в запрос, ни в логи хостинга);
+// из адресной строки стирается до попытки входа. Неверный ключ в QR ведёт
+// себя как неверный кэш: молча показывает форму пароля.
+const frag=location.hash.match(/^#k=(.+)$/);
+if(frag){{try{{history.replaceState(null,"",location.pathname+location.search);}}catch(_e){{}}
+  attempt(decodeURIComponent(frag[1]),true);}}
+else{{const cached=localStorage.getItem(KEY);
+  if(cached) attempt(cached,true);}}
 </script>
 </body></html>
 """
