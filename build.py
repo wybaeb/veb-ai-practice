@@ -58,7 +58,9 @@ body{{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:
 .card{{background:#23262e;border:1px solid rgba(255,255,255,.11);border-radius:22px;
  box-shadow:0 30px 80px rgba(0,0,0,.45);padding:40px 36px;width:min(440px,94vw)}}
 .mark{{width:46px;height:46px;border-radius:13px;margin-bottom:22px;
- background:linear-gradient(135deg,#ff5533,#ff8a6b);box-shadow:0 8px 22px rgba(255,85,51,.36)}}
+ background:linear-gradient(135deg,#ff5533,#ff8a6b);box-shadow:0 8px 22px rgba(255,85,51,.36);
+ display:flex;align-items:center;justify-content:center;
+ color:#fff;font-weight:800;font-size:19px;letter-spacing:-.5px;user-select:none}}
 .eyebrow{{color:#ff5533;font-weight:800;font-size:11.5px;letter-spacing:.14em;
  text-transform:uppercase;margin-bottom:10px}}
 h1{{font-size:25px;font-weight:800;margin:0 0 10px;line-height:1.2}}
@@ -76,7 +78,7 @@ button:hover{{filter:brightness(1.08)}}
 </style></head>
 <body>
 <div class="card">
- <div class="mark"></div>
+ <div class="mark">KC</div>
  <div class="eyebrow">karpov.courses × ВЭБ.РФ</div>
  <h1>Практика с персональным ИИ-агентом</h1>
  <p>Страница закрыта паролем. Внутри — пошаговое описание практики, промпты,
