@@ -20,7 +20,7 @@ allowed() {
     AGENTS.md|PIPELINE.md|CHECKLIST.md|README.md|CLAUDE.md|PUBLIC_ONLY.md) return 0 ;;
     build.py|index.html|.gitignore|.nojekyll)                              return 0 ;;
     src/app.html)                                                          return 0 ;;
-    templates/*|icons/*|.githooks/*)                                       return 0 ;;
+    templates/*|icons/*|assets/deck/*|.githooks/*)                         return 0 ;;
     *) return 1 ;;
   esac
 }

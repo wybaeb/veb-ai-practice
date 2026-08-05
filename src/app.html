@@ -146,25 +146,28 @@ pre.prompt{background:#15171d;border:1px solid var(--line);border-left:3px solid
 .field{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:11px 13px}
 .field .n{color:var(--brand);font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
 .field .v{font-size:12.8px;color:var(--ink2);margin-top:4px;line-height:1.4}
-/* миниатюры слайдов: пропорции 16:9 и скелет содержимого, как на настоящем слайде */
-.deckgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
-.sl{aspect-ratio:16/9;background:#20232b;border:1px solid var(--line);border-radius:8px;
-  padding:9px 12px;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden}
-.sl::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--brand);opacity:.85}
-.sl .t{font-size:11px;font-weight:700;color:var(--ink);line-height:1.25}
-.sl .skl{flex:1;display:flex;flex-direction:column;gap:4px;justify-content:center;padding:0 2px}
-.sl .skl i{display:block;height:5px;border-radius:3px;background:rgba(255,255,255,.13)}
-.sl .skl i.a{background:rgba(255,85,51,.4)}
-.sl .skt{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:3px;align-content:center}
-.sl .skt i{height:8px;background:rgba(255,255,255,.09);border-radius:2px}
-.sl .skt i.h{background:rgba(255,85,51,.35)}
-.sl .skc{flex:1;display:flex;align-items:flex-end;gap:5px;padding:2px 12%}
-.sl .skc i{flex:1;background:rgba(255,85,51,.55);border-radius:2px 2px 0 0}
-.sl .skg{flex:1;display:flex;align-items:center;padding:0 4%}
-.sl .skg svg{width:100%;height:80%;display:block}
-.sl .f{display:flex;justify-content:space-between;align-items:baseline}
-.sl .n{color:var(--ink3);font-family:var(--mono);font-size:10px}
-.sl .src{color:var(--brand);font-size:10px;font-weight:800;letter-spacing:.06em}
+/* вьюер презентации: листаемые слайды + вкладка MARP-кода */
+.viewer{background:#15171d;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.vhead{display:flex;align-items:center;gap:12px;padding:9px 13px;background:#1b1e26;border-bottom:1px solid var(--line)}
+.vtabs{display:flex;gap:6px}
+.vtab{background:transparent;border:1px solid var(--line);border-radius:8px;color:var(--ink2);
+  font-family:var(--font);font-size:12px;font-weight:700;padding:5px 12px;cursor:pointer}
+.vtab.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.vtitle{flex:1 1 auto;min-width:0;font-size:12.5px;font-weight:700;color:var(--ink2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
+.vcount{font-family:var(--mono);font-size:12px;color:var(--ink3);white-space:nowrap}
+.vcount span{color:var(--brand);font-weight:600}
+.vstage{display:flex;align-items:stretch}
+.vnav{flex:0 0 40px;background:transparent;border:0;color:var(--brand);font-size:30px;line-height:1;
+  cursor:pointer;transition:.15s}
+.vnav:hover{background:rgba(255,85,51,.1)}
+.vbody{flex:1 1 auto;min-width:0;background:#1e2027}
+#vimg{display:block;width:100%;height:auto}
+#vcode{margin:0;aspect-ratio:16/9;overflow:auto;font-family:var(--mono);font-size:11.5px;
+  line-height:1.6;color:#dfe3ec;padding:14px 18px;white-space:pre-wrap;box-sizing:border-box}
+.vdots{display:flex;gap:7px;justify-content:center;padding:10px 0 12px;background:#1b1e26;border-top:1px solid var(--line)}
+.vdot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.18);border:0;padding:0;cursor:pointer}
+.vdot.on{background:var(--brand)}
 .verdicts{display:grid;gap:9px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
 .verdict{border-radius:11px;padding:12px 14px;background:var(--bg2);border:1px solid var(--line)}
 .verdict .h{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
@@ -392,11 +395,13 @@ footer b{color:var(--ink2)}
         <path class="edge" d="M400 470C400 486 300 484 250 496" marker-end="url(#arr)"/>
         <path class="edge" d="M560 470C560 486 660 484 710 496" marker-end="url(#arr)"/>
         <path class="edge" d="M860 360C905 360 905 500 860 522" marker-end="url(#arr)"/>
-        <path class="edge" d="M220 554C220 592 285 597 350 597" marker-end="url(#arr)"/>
-        <path class="edge" d="M740 554C740 592 675 597 610 597" marker-end="url(#arr)"/>
-        <path class="edge" d="M350 200Q20 200 20 350V480Q20 620 180 620L350 620" marker-end="url(#arr)"/>
-        <path class="edge" d="M350 445Q58 445 58 560V690Q58 777 180 777L350 777" marker-end="url(#arr)"/>
-        <path class="edge" d="M860 540Q940 540 940 650V700Q940 777 780 777L610 777" marker-end="url(#arr)"/>
+        <path class="edge" d="M740 554C740 572 660 580 600 580" marker-end="url(#arr)"/>
+        <path class="edge" d="M220 554C220 650 280 684 350 684" marker-end="url(#arr)"/>
+        <path class="edge" d="M350 200Q20 200 20 380V560Q20 706 180 706L350 706" marker-end="url(#arr)"/>
+        <path class="edge" d="M860 540Q935 560 935 620V640Q935 693 780 693L610 693" marker-end="url(#arr)"/>
+        <path class="edge" style="stroke-dasharray:4 4" d="M610 770C690 764 690 652 612 636" marker-end="url(#arr)"/>
+        <text class="sb" x="676" y="702">v2: обязательство</text>
+        <text class="sb" x="676" y="715">и пересчёт</text>
 
         <!-- старт и финиш -->
         <rect class="cp" x="310" y="0" width="340" height="48" rx="24"/>
@@ -426,14 +431,14 @@ footer b{color:var(--ink2)}
           <text class="code" x="636" y="517">A7</text><text class="nm" x="636" y="534">Финансовая модель</text>
           <text class="sb" x="710" y="517">NPV, сценарии, Монте-Карло</text></g>
         <g><rect class="nd" x="350" y="580" width="260" height="58" rx="13"/>
-          <text class="code" x="366" y="601">A8</text><text class="nm" x="366" y="618">Презентация защиты</text>
-          <text class="sb" x="440" y="601">девять слайдов</text></g>
+          <text class="code" x="366" y="601">A10</text><text class="nm" x="366" y="618">Дорожная карта</text>
+          <text class="sb" x="446" y="601">Гант · собирается до защиты</text></g>
         <g><rect class="nd" x="350" y="664" width="260" height="58" rx="13"/>
-          <text class="code" x="366" y="685">A9</text><text class="nm" x="366" y="702">Протокол экспертизы</text>
-          <text class="sb" x="440" y="685">замечания коллег и пересчёт</text></g>
+          <text class="code" x="366" y="685">A8</text><text class="nm" x="366" y="702">Презентация защиты</text>
+          <text class="sb" x="440" y="685">Гант — слайд «Фазы»</text></g>
         <g><rect class="nd" x="350" y="748" width="260" height="58" rx="13"/>
-          <text class="code" x="366" y="769">A10</text><text class="nm" x="366" y="786">Дорожная карта</text>
-          <text class="sb" x="446" y="769">12 месяцев, приходит после</text></g>
+          <text class="code" x="366" y="769">A9</text><text class="nm" x="366" y="786">Протокол экспертизы</text>
+          <text class="sb" x="440" y="769">замечания коллег и пересчёт</text></g>
 
         <rect class="cp" x="310" y="832" width="340" height="48" rx="24"/>
         <text class="code" x="330" y="852">ФИНИШ</text>
@@ -441,8 +446,10 @@ footer b{color:var(--ink2)}
       </svg>
     </div>
     <p class="sub" style="margin:14px 0 0;font-size:14px">Стрелка читается как «из этого собирается»:
-      холст — из паспорта и коридора, финмодель — из коридора и холста, презентация — из четырёх
-      утверждённых артефактов. Поэтому любая цифра на защите прослеживается до источника.</p>
+      холст — из паспорта и коридора, финмодель — из коридора и холста, дорожная карта — из холста
+      и финмодели, а презентация — из паспорта, холста, допустимости, финмодели и дорожной карты:
+      Гант становится слайдом «Ключевые фазы». После защиты протокол обновляет модель, слайды
+      и карту (v2). Поэтому любая цифра на защите прослеживается до источника.</p>
 
     <h3>Внутри каждого шага повторяется один цикл</h3>
     <div class="grid g3">
@@ -1148,210 +1155,19 @@ NPV обращается в ноль. Сформулируй словами.
       <details class="step">
         <summary>
           <div class="stepno">8</div>
-          <div class="stephead"><div class="t">Презентация защиты</div>
-            <div class="s">пауза перед защитой · агент собирает, пока вы пьёте кофе</div></div>
-          <div class="art">A8</div>
-        </summary>
-        <div class="stepbody">
-          <p>Девять слайдов на четыре минуты — по шести типовым слайдам питча инициативы
-            курса DDDM (титул → видение → гипотезы и риски → фазы → ресурсы →
-            инвестиционные показатели) плюс специфика программы и отдельный слайд
-            «График NPV». Всё берётся из утверждённых артефактов — ничего
-            не формулируется заново, поэтому каждая цифра прослеживается до источника.
-            Оформление агент берёт из набора сам, ваше дело — содержание.</p>
-          <div class="io">
-            <div class="iobox"><div class="k">на входе</div>
-              <div class="v"><span class="ac">A2</span> паспорт · <span class="ac">A5</span> холст ·
-                <span class="ac">A6</span> допустимость · <span class="ac">A7</span> финмодель —
-                только утверждённые</div></div>
-            <div class="ioarr"><svg aria-hidden="true"><use href="#ic-arrow"/></svg></div>
-            <div class="iobox out"><div class="k">на выходе</div>
-              <div class="v"><span class="ac">A8</span> <b>Презентация защиты</b> — deck.pdf,
-                девять слайдов с репликами и таблицей прослеживаемости</div></div>
-          </div>
-          <div class="label">промпт</div>
-          <div class="promptwrap">
-<pre class="prompt" id="p8">Собери презентацию защиты в MARP: deck.md с темой templates/theme.css
-(в frontmatter: theme: initiative).
-
-НА ВХОДЕ — только утверждённые артефакты: паспорт (A2), холст (A5), заключение
-о допустимости (A6), финмодель (A7). НИЧЕГО НЕ ПРИДУМЫВАЙ: если данных нет —
-поставь пометку «[нет данных: нужен …]» и скажи, чего не хватает.
-
-РОВНО ДЕВЯТЬ СЛАЙДОВ, защита четыре минуты (шаблоны питча DDDM + специфика):
-1) титул: инициатива, тип, этап «концепция», Ф. И. О. и роль, состав группы;
-2) видение: «для [адресат], кто [потребность], [решение] даёт [выгоды];
-   в отличие от [сегодняшнего пути] — [отличие]»; почему сейчас;
-3) решение и роль ИИ: минимальный класс и строка, почему именно он;
-4) гипотеза, эффект и риски: гипотеза с числом, таблица коридора с метками,
-   метрики, главный риск;
-5) допустимость: класс данных, контур, участие человека, порог отзыва
-   полномочий, ответственный;
-6) ключевые фазы: каждая заканчивается работающим результатом, первая — пилот,
-   точки решения go/no-go;
-7) ресурсы: команда ролями, трудозатраты диапазоном, закупки, срок до пилота;
-8) инвестиционные показатели: NPV, окупаемость, три сценария, вероятность
-   NPV > 0, бюджет — каждая цифра из утверждённой финмодели (A7);
-9) график NPV: картинка из финмодели
-   (python3 templates/finmodel.py --chart-npv npv_payback.png) + первый шаг
-   до понедельника и кто о нём знает.
-
-Каждое число — с меткой достоверности БЕНЧМАРК / АНАЛОГ / ГИПОТЕЗА
-и из артефакта. В notes каждого слайда — реплика на 30 секунд. Иконка не более
-одной на слайд. Не больше семи строк текста. Таблицы — только
-markdown-разметкой, без &lt;table&gt; и инлайн-стилей.
-
-Проверь вёрстку: python3 templates/check_slides.py deck.md — если слайд назван,
-сократи формулировки (не кегль). Собери PDF:
-npx @marp-team/marp-cli deck.md -o deck.pdf --theme templates/theme.css
-Шаблоны и тема — в открытом репозитории github.com/wybaeb/veb-ai-practice,
-папка templates/. Если исполнять команды не можешь (обычный чат) — вывод
-проверок не изображай: выдай deck.md целиком одним блоком кода и раздел
-«собери сам» с этими командами, а на слайде 9 оставь ссылку npv_payback.png.
-
-Затем покажи ПРОВЕРКУ ПРОСЛЕЖИВАЕМОСТИ: [цифра на слайде | артефакт | метка].</pre>
-            <button class="copy" data-copy="#p8">Копировать</button>
-          </div>
-
-          <div class="label">как выглядит артефакт</div>
-          <div class="artifact">
-            <div class="bar"><i></i><b>A8 · Презентация защиты</b> · deck.pdf, 9 слайдов</div>
-            <div class="doc">
-              <div class="deckgrid">
-                <div class="sl"><div class="t">Титул: инициатива, этап «концепция», автор</div>
-                  <div class="skl"><i class="a" style="width:72%"></i><i style="width:46%"></i><i style="width:34%"></i></div>
-                  <div class="f"><span class="n">01</span><span class="src">из A2</span></div></div>
-                <div class="sl"><div class="t">Видение: для кого · потребность · отличие</div>
-                  <div class="skl"><i style="width:88%"></i><i style="width:80%"></i><i class="a" style="width:56%"></i></div>
-                  <div class="f"><span class="n">02</span><span class="src">из A5, поля 1–2</span></div></div>
-                <div class="sl"><div class="t">Решение и роль ИИ: минимальный класс</div>
-                  <div class="skl"><i style="width:64%"></i><i class="a" style="width:78%"></i><i style="width:42%"></i></div>
-                  <div class="f"><span class="n">03</span><span class="src">из A5, поля 3–4</span></div></div>
-                <div class="sl"><div class="t">Гипотеза, эффект и риски: коридор с метками</div>
-                  <div class="skt"><i class="h"></i><i class="h"></i><i class="h"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-                  <div class="f"><span class="n">04</span><span class="src">из A4 и A5</span></div></div>
-                <div class="sl"><div class="t">Допустимость: данные, контур, ответственный</div>
-                  <div class="skl"><i style="width:52%"></i><i style="width:76%"></i><i style="width:60%"></i></div>
-                  <div class="f"><span class="n">05</span><span class="src">из A6</span></div></div>
-                <div class="sl"><div class="t">Ключевые фазы с точками решения</div>
-                  <div class="skl"><i class="a" style="width:30%"></i><i class="a" style="width:52%;margin-left:14%"></i><i class="a" style="width:44%;margin-left:38%"></i></div>
-                  <div class="f"><span class="n">06</span><span class="src">из A5, поля 8–9</span></div></div>
-                <div class="sl"><div class="t">Ресурсы: роли, трудозатраты, закупки</div>
-                  <div class="skl"><i style="width:70%"></i><i style="width:58%"></i><i style="width:66%"></i></div>
-                  <div class="f"><span class="n">07</span><span class="src">из A5 и A7</span></div></div>
-                <div class="sl"><div class="t">Инвестиционные показатели и сценарии</div>
-                  <div class="skc"><i style="height:30%"></i><i style="height:55%"></i><i style="height:80%"></i><i style="height:44%"></i></div>
-                  <div class="f"><span class="n">08</span><span class="src">из A7 (finmodel.xlsx)</span></div></div>
-                <div class="sl"><div class="t">График NPV и первый шаг</div>
-                  <div class="skg"><svg viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
-                    <polyline points="2,30 30,26 58,14 96,4" fill="none" stroke="#ff5533" stroke-width="2.4" stroke-linecap="round"/>
-                    <line x1="2" y1="22" x2="98" y2="22" stroke="rgba(255,255,255,.18)" stroke-width="1"/></svg></div>
-                  <div class="f"><span class="n">09</span><span class="src">из A7 (--chart-npv)</span></div></div>
-              </div>
-              <p class="cap2"><b>Проверка прослеживаемости.</b> Последним действием агент выводит
-                таблицу «цифра на слайде → артефакт → метка достоверности». Если строка не сходится,
-                на слайде появилась цифра, которой нет в артефактах, — и это видно до защиты,
-                а не во время неё.</p>
-            </div>
-          </div>
-
-          <div class="done-when" style="margin-top:16px"><b>Готово, когда:</b> девять слайдов
-            собраны, у каждой цифры есть источник и метка, реплики написаны,
-            на слайде 9 — график NPV из финмодели.</div>
-        </div>
-      </details>
-
-      <details class="step">
-        <summary>
-          <div class="stepno">9</div>
-          <div class="stephead"><div class="t">Защита и перекрёстная экспертиза</div>
-            <div class="s">сессия С12 · разбор ведут сами участники</div></div>
-          <div class="art">A9</div>
-        </summary>
-        <div class="stepbody">
-          <p>Четыре минуты на доклад. Замечания коллег агент фиксирует <b>в момент обсуждения</b>
-            и тут же показывает, как правка отражается на модели и на слайдах. Это и есть
-            демонстрация рабочего цикла: решение обсуждается и пересчитывается за минуты.</p>
-          <div class="io">
-            <div class="iobox"><div class="k">на входе</div>
-              <div class="v"><span class="ac">A8</span> презентация — и замечания коллег,
-                надиктованные или вписанные по ходу обсуждения.</div>
-              <div class="q">«Оперблок считает, что сопровождение занижено:
-                у них выходило 25 %»</div></div>
-            <div class="ioarr"><svg aria-hidden="true"><use href="#ic-arrow"/></svg></div>
-            <div class="iobox out"><div class="k">на выходе</div>
-              <div class="v"><span class="ac">A9</span> <b>Протокол экспертизы</b> — замечания
-                по трём группам, пересчёт было/стало, обязательство недели</div></div>
-          </div>
-          <div class="label">промпт</div>
-          <div class="promptwrap">
-<pre class="prompt" id="p9">Веди протокол перекрёстной экспертизы во время защиты. Замечания я буду
-вписывать сообщениями — по ходу или списком после обсуждения. Работай в чате,
-где лежат финмодель и слайды шагов 7–8; если чат новый — сначала попроси
-меня их вставить.
-
-Фиксируй каждое замечание: [кто высказал | к какому слайду относится | суть
-одной строкой]. Записывай нейтрально: не защищай инициативу и не соглашайся
-автоматически.
-
-После обсуждения раздели замечания на три группы: ПРИНИМАЕМ (что именно
-меняется); ПРИНИМАЕМ С ОГОВОРКОЙ (что и при каком условии); НЕ ПРИНИМАЕМ
-(почему, со ссылкой на данные или границы инициативы).
-
-По принятым, затрагивающим цифры, ПЕРЕСЧИТАЙ модель и покажи было/стало:
-насколько изменились NPV и окупаемость. Выведи обновлённые тексты затронутых
-слайдов целиком.
-
-Зафиксируй обязательство первой недели: конкретное проверяемое действие
-до следующего понедельника и роль, которая о нём знает. «Поговорить» не годится.</pre>
-            <button class="copy" data-copy="#p9">Копировать</button>
-          </div>
-
-          <div class="label">как выглядит артефакт</div>
-          <div class="artifact">
-            <div class="bar"><i></i><b>A9 · Протокол перекрёстной экспертизы</b> · 7 замечаний</div>
-            <div class="doc">
-              <div class="verdicts">
-                <div class="verdict yes"><div class="h">принимаем · 3</div>
-                  <p>Сопровождение занижено: ставим 25 % вместо 15 %. Пилот расширяется
-                    с 60 до 90 заявок</p></div>
-                <div class="verdict maybe"><div class="h">с оговоркой · 2</div>
-                  <p>Экономию на возвратах учитываем только после того, как дирекция
-                    подтвердит текущую долю возвратов по своей выборке</p></div>
-                <div class="verdict no"><div class="h">не принимаем · 2</div>
-                  <p>Расширение на нетиповые заявки выходит за границы инициативы,
-                    зафиксированные в паспорте</p></div>
-              </div>
-              <p class="cap2" style="margin-top:14px"><b>Пересчёт на месте:</b>
-                NPV +6,1 → <b>+4,6 млн ₽</b>, окупаемость 17 → <b>18 мес</b>, вероятность
-                NPV &gt; 0 снизилась с 97 до 93 %. Слайды 8–9 обновлены.<br>
-                <b>Обязательство первой недели:</b> запросить у дирекции экспертизы выгрузку
-                по возвратам за 2025 год, до понедельника, знает руководитель дирекции.</p>
-            </div>
-          </div>
-
-          <div class="done-when" style="margin-top:16px"><b>Готово, когда:</b> замечания
-            классифицированы, модель пересчитана, слайды обновлены, обязательство первой недели
-            записано.</div>
-        </div>
-      </details>
-
-      <details class="step">
-        <summary>
-          <div class="stepno">10</div>
           <div class="stephead"><div class="t">Дорожная карта на 12 месяцев</div>
-            <div class="s">после программы · аудиторного времени не требует</div></div>
+            <div class="s">пауза перед защитой · собирается до презентации</div></div>
           <div class="art">A10</div>
         </summary>
         <div class="stepbody">
-          <p>К концу программы все входные данные уже собраны, поэтому карту агент дособирает
-            после интенсива и присылает вам. Каждый этап заканчивается работающим результатом,
-            после каждого — точка принятия решения с числовым порогом. Карта визуализируется
-            диаграммой Ганта.</p>
+          <p>К этому моменту всё посчитано, поэтому агент раскладывает реализацию на этапы
+            по кварталам и собирает диаграмму Ганта. Карта — промежуточный артефакт: она войдёт
+            в презентацию слайдом «Ключевые фазы», а после защиты обновится замечаниями
+            и обязательством первой недели.</p>
           <div class="io">
             <div class="iobox"><div class="k">на входе</div>
-              <div class="v"><span class="ac">A5</span> холст · <span class="ac">A7</span> финмодель ·
-                <span class="ac">A9</span> протокол — с обязательством первой недели</div></div>
+              <div class="v"><span class="ac">A5</span> холст (пилот и шаги) ·
+                <span class="ac">A7</span> финмодель (пороги и сценарии)</div></div>
             <div class="ioarr"><svg aria-hidden="true"><use href="#ic-arrow"/></svg></div>
             <div class="iobox out"><div class="k">на выходе</div>
               <div class="v"><span class="ac">A10</span> <b>Дорожная карта</b> — диаграмма Ганта
@@ -1359,9 +1175,9 @@ npx @marp-team/marp-cli deck.md -o deck.pdf --theme templates/theme.css
           </div>
           <div class="label">промпт</div>
           <div class="promptwrap">
-<pre class="prompt" id="p10">Собери дорожную карту инициативы на 12 месяцев по холсту (A5), финмодели (A7)
-и протоколу экспертизы (A9). Работай только с артефактами из этого чата:
-если их здесь нет — не придумывай данные, попроси меня их прислать.
+<pre class="prompt" id="p8">Собери дорожную карту инициативы на 12 месяцев по холсту (A5) и финмодели
+(A7). Работай только с артефактами из этого чата: если их здесь нет —
+не придумывай данные, попроси меня их прислать.
 
 Разложи на 4–6 этапов по кварталам. КАЖДЫЙ ЭТАП ЗАКАНЧИВАЕТСЯ РАБОТАЮЩИМ
 РЕЗУЛЬТАТОМ, а не документом. Первый этап — пилот из холста, с тем же числовым
@@ -1372,16 +1188,15 @@ npx @marp-team/marp-cli deck.md -o deck.pdf --theme templates/theme.css
 продолжаем, меняем подход или останавливаемся.
 
 Отдельно — до пяти рисков: что может остановить инициативу, признак наступления,
-что делать. Первый месяц распиши по неделям, начиная с обязательства первой недели.
+что делать. Первый месяц распиши по неделям от старта пилота.
 
-В конце собери диаграмму Ганта по этапам с точками решения:
+Собери диаграмму Ганта по этапам с точками решения:
 python3 templates/roadmap.py -o roadmap_gantt.png — впиши свои этапы в блок
 ЭТАПЫ шаблона (репозиторий github.com/wybaeb/veb-ai-practice). Если исполнения
 кода у тебя нет — запуск не имитируй: выдай блок mermaid gantt, я отрендерю сам.
 
-Заверши вопросом: вернёмся к пересчёту модели через месяц, когда будут первые
-данные пилота?</pre>
-            <button class="copy" data-copy="#p10">Копировать</button>
+Эта карта пойдёт в презентацию слайдом «Ключевые фазы»: Гант и точки решения.</pre>
+            <button class="copy" data-copy="#p8">Копировать</button>
           </div>
 
           <div class="label">как выглядит артефакт</div>
@@ -1412,14 +1227,382 @@ python3 templates/roadmap.py -o roadmap_gantt.png — впиши свои эта
                 идём дальше · ответы со ссылкой на пункт ≥ 90 % · срок заявки ≤ 34 дн на выборке
                 квартала · тиражируем на смежные процессы или фиксируем как есть.</p>
               <p class="cap2"><b>Плюс к этому:</b> до пяти рисков с признаком наступления и ответом
-                на каждый, и первый месяц по неделям — начиная с того самого обязательства,
-                которое вы взяли на защите.</p>
+                на каждый, и первый месяц по неделям от старта пилота. Обязательство первой недели
+                впишется после защиты — картой v2.</p>
             </div>
           </div>
 
           <div class="done-when" style="margin-top:16px"><b>Готово, когда:</b> этапы разложены
             с результатами и точками решения, собрана диаграмма Ганта, риски названы,
             первый месяц расписан по неделям.</div>
+        </div>
+      </details>
+
+      <details class="step">
+        <summary>
+          <div class="stepno">9</div>
+          <div class="stephead"><div class="t">Презентация защиты</div>
+            <div class="s">пауза перед защитой · агент собирает, пока вы пьёте кофе</div></div>
+          <div class="art">A8</div>
+        </summary>
+        <div class="stepbody">
+          <p>Девять слайдов на четыре минуты — по шести типовым слайдам питча инициативы
+            курса DDDM (титул → видение → гипотезы и риски → фазы → ресурсы →
+            инвестиционные показатели) плюс специфика программы и отдельный слайд
+            «График NPV». Слайд «Ключевые фазы» — диаграмма Ганта из дорожной карты.
+            Всё берётся из утверждённых артефактов — ничего не формулируется заново,
+            поэтому каждая цифра прослеживается до источника. Оформление агент берёт
+            из набора сам, ваше дело — содержание.</p>
+          <div class="io">
+            <div class="iobox"><div class="k">на входе</div>
+              <div class="v"><span class="ac">A2</span> паспорт · <span class="ac">A5</span> холст ·
+                <span class="ac">A6</span> допустимость · <span class="ac">A7</span> финмодель ·
+                <span class="ac">A10</span> дорожная карта — только утверждённые</div></div>
+            <div class="ioarr"><svg aria-hidden="true"><use href="#ic-arrow"/></svg></div>
+            <div class="iobox out"><div class="k">на выходе</div>
+              <div class="v"><span class="ac">A8</span> <b>Презентация защиты</b> — deck.pdf,
+                девять слайдов с репликами и таблицей прослеживаемости</div></div>
+          </div>
+          <div class="label">промпт</div>
+          <div class="promptwrap">
+<pre class="prompt" id="p9">Собери презентацию защиты в MARP: deck.md с темой templates/theme.css
+(в frontmatter: theme: initiative). Заготовка — templates/deck_template.md,
+заполненный пример — templates/deck_example.md.
+
+НА ВХОДЕ — только утверждённые артефакты: паспорт (A2), холст (A5), заключение
+о допустимости (A6), финмодель (A7), дорожная карта (A10). НИЧЕГО
+НЕ ПРИДУМЫВАЙ: если данных нет — поставь пометку «[нет данных: нужен …]»
+и скажи, чего не хватает.
+
+РОВНО ДЕВЯТЬ СЛАЙДОВ, защита четыре минуты (шаблоны питча DDDM + специфика):
+1) титул: инициатива, тип, этап «концепция», Ф. И. О. и роль, состав группы;
+2) видение: «для [адресат], кто [потребность], [решение] даёт [выгоды];
+   в отличие от [сегодняшнего пути] — [отличие]»; почему сейчас;
+3) решение и роль ИИ: минимальный класс и строка, почему именно он;
+4) гипотеза, эффект и риски: гипотеза с числом, таблица коридора с метками,
+   метрики, главный риск;
+5) допустимость: класс данных, контур, участие человека, порог отзыва
+   полномочий, ответственный;
+6) ключевые фазы: диаграмма Ганта из дорожной карты (A10) картинкой
+   roadmap_gantt.png — этапы с работающими результатами, первая фаза — пилот,
+   ◆ точки решения go/no-go; текстом фазы не дублируй;
+7) ресурсы: команда ролями, трудозатраты диапазоном, закупки, срок до пилота;
+8) инвестиционные показатели: NPV, окупаемость, три сценария, вероятность
+   NPV > 0, бюджет — каждая цифра из утверждённой финмодели (A7);
+9) график NPV: картинка из финмодели
+   (python3 templates/finmodel.py --chart-npv npv_payback.png) + первый шаг
+   до понедельника и кто о нём знает.
+
+Каждое число — с меткой достоверности БЕНЧМАРК / АНАЛОГ / ГИПОТЕЗА
+и из артефакта. В notes каждого слайда — реплика на 30 секунд. Иконка не более
+одной на слайд. Не больше семи строк текста. Таблицы — только
+markdown-разметкой, без &lt;table&gt; и инлайн-стилей.
+
+Проверь вёрстку: python3 templates/check_slides.py deck.md — если слайд назван,
+сократи формулировки (не кегль). Собери PDF:
+npx @marp-team/marp-cli deck.md -o deck.pdf --theme templates/theme.css
+Шаблоны и тема — в открытом репозитории github.com/wybaeb/veb-ai-practice,
+папка templates/. Если исполнять команды не можешь (обычный чат) — вывод
+проверок не изображай: выдай deck.md целиком одним блоком кода и раздел
+«собери сам» с этими командами, а на слайде 9 оставь ссылку npv_payback.png.
+
+Затем покажи ПРОВЕРКУ ПРОСЛЕЖИВАЕМОСТИ: [цифра на слайде | артефакт | метка].</pre>
+            <button class="copy" data-copy="#p9">Копировать</button>
+          </div>
+
+          <div class="label">как выглядит артефакт</div>
+          <div class="artifact">
+            <div class="bar"><i></i><b>A8 · Презентация защиты</b> · deck.pdf, 9 слайдов</div>
+            <div class="doc">
+              <div class="viewer" id="deckviewer">
+                <div class="vhead">
+                  <div class="vtabs">
+                    <button class="vtab on" data-mode="slide">Слайд</button>
+                    <button class="vtab" data-mode="code">MARP-код</button>
+                  </div>
+                  <div class="vtitle" id="vtitle">Титул</div>
+                  <div class="vcount"><span id="vn">1</span> / 9</div>
+                </div>
+                <div class="vstage">
+                  <button class="vnav" id="vprev" aria-label="Предыдущий слайд">&#8249;</button>
+                  <div class="vbody">
+                    <img id="vimg" src="assets/deck/slide-01.jpg" alt="Слайд 1 · Титул">
+                    <pre id="vcode" hidden></pre>
+                  </div>
+                  <button class="vnav" id="vnext" aria-label="Следующий слайд">&#8250;</button>
+                </div>
+                <div class="vdots" id="vdots"></div>
+<script type="text/plain" class="vsrc" data-t="Титул">
+---
+marp: true
+theme: initiative
+paginate: true
+footer: 'karpov.courses × ВЭБ.РФ · Государство на скорости ИИ'
+title: 'Предпроектная проработка инициатив регионов'
+---
+
+
+<!-- _class: title -->
+
+### Проектная инициатива · этап: концепция
+
+# Предпроектная проработка инициатив регионов
+
+Иван Петров · директор департамента инфраструктурных проектов
+Мини-группа: Петров, Соколова, Дёмин, Гаврилова
+
+<!-- Реплика (20 сек): Добрый день. Представляю проектную инициативу:
+сервис предпроектной проработки для регионов. Это этап концепции —
+защищаю гипотезу, а не отчёт о внедрении. -->
+</script>
+<script type="text/plain" class="vsrc" data-t="Видение">
+![icon](../icons/svg/lightbulb.svg)
+
+## Видение
+
+# Для регионов, которым нужна концепция объекта, сервис готовит черновик за три дня вместо десяти недель
+
+**В отличие от** ручного цикла с очередью к аналитикам — черновик делает агент,
+эксперт департамента проверяет и подписывает.
+
+**Почему сейчас:** запрос регионов вырос, экспертный ресурс ограничен.
+
+<!-- Реплика (30 сек): Формула простая: для регионов, которым нужна концепция
+объекта, наш сервис даёт черновик за три дня. Отличие от сегодняшнего пути —
+не больше людей в очередь, а агент, который делает черновую работу. -->
+</script>
+<script type="text/plain" class="vsrc" data-t="Решение и роль ИИ">
+![icon](../icons/svg/cpu.svg)
+
+## Решение и роль ИИ
+
+**Что появится:** сервис, который по обращению региона собирает черновик концепции —
+профиль территории, сопоставимые объекты, диапазон стоимостных параметров, структура
+обоснования — и передаёт его эксперту департамента на доработку.
+
+**Класс решения:** агент с интеграциями
+
+*Почему именно этот класс:* базы знаний недостаточно — нужны обращения к внешним
+реестрам и расчёт; автономный агент избыточен — заключение подписывает эксперт.
+
+| Сегодня | После |
+|---|---|
+| ручной сбор данных, очередь заявок — **L1** | сбор и черновик агентом, эксперт проверяет — **L3** |
+
+<!-- Реплика (30 сек): Минимальный класс, который закрывает задачу, — агент
+с интеграциями. Автономию мы сюда не ставим: ответственность за заключение
+остаётся на эксперте, и это принципиально. -->
+</script>
+<script type="text/plain" class="vsrc" data-t="Гипотеза, эффект и риски">
+![icon](../icons/svg/target.svg)
+
+## Гипотеза, эффект и риски
+
+**Гипотеза:** 60 → ≤34 ч/заявка на пилоте из 20 заявок <span class="tag hypo">ГИПОТЕЗА</span>
+
+| Эффект | Ед. изм. | Минимум | Типично | Максимум | Достоверность |
+|---|---|---|---|---|---|
+| Срок подготовки концепции | недель | 10 → 4 | 10 → 3 | 10 → 2 | <span class="tag analog">АНАЛОГ</span> |
+| Трудозатраты аналитика на заявку | часов | 60 → 34 | 60 → 28 | 60 → 24 | <span class="tag bench">БЕНЧМАРК</span> |
+
+**Опережающая метрика:** черновик за 3 дня ≥ 70 % заявок ·
+**Запаздывающая:** проекты, дошедшие до соглашения
+
+**Главный риск:** оценка расходится с аналогами → останов при расхождении >30 %,
+разбор экспертом.
+
+> В расчёт заложена **консервативная граница**: 34 часа и текущие 240 заявок.
+
+<!-- Реплика (35 сек): Гипотеза проверяемая: часы на заявку, порог 34, пилот
+из 20 заявок. Эффект — коридором с метками, считаем по нижней границе. Риск
+называем сами и показываем, как он закрыт порогом остановки.
+34 ч — бенчмарк источника; гипотеза — что он переносится на наш пилот. -->
+</script>
+<script type="text/plain" class="vsrc" data-t="Допустимость">
+![icon](../icons/svg/shield.svg)
+
+## Допустимость
+
+| Параметр | Решение |
+|---|---|
+| Класс данных | служебная тайна (материалы заявок регионов) |
+| Контур размещения | аттестованный закрытый контур организации |
+| Участие человека | обязательно: заключение подписывает эксперт департамента |
+| Порог отзыва полномочий | расхождение стоимостной оценки с аналогами более 30 % → останов, разбор экспертом |
+| Ответственный за ошибочное решение | руководитель профильного управления |
+
+*К проверке юристом:* режим служебной тайны при передаче материалов в контур ·
+маркировка сгенерированных разделов концепции с 01.09.2026
+
+<!-- Реплика (30 сек): Заявки регионов — служебная тайна, поэтому облако
+исключено: только аттестованный контур. Подпись эксперта остаётся обязательной. -->
+</script>
+<script type="text/plain" class="vsrc" data-t="Ключевые фазы">
+![icon](../icons/svg/layers.svg)
+
+## Ключевые фазы
+
+![gantt w:880](roadmap_gantt_example.png)
+
+<!-- Реплика (25 сек): План по кварталам — из дорожной карты. Каждая фаза
+заканчивается работающим результатом. После каждой — точка решения: продолжаем,
+меняем подход или останавливаемся. Порог пилота — 34 часа на заявку. -->
+</script>
+<script type="text/plain" class="vsrc" data-t="Ресурсы">
+![icon](../icons/svg/users.svg)
+
+## Ресурсы
+
+| Роль | Загрузка | Откуда |
+|---|---|---|
+| Владелец инициативы (директор департамента) | 10 % | внутри |
+| Эксперт-аналитик предпроектной проработки | 50 % на пилоте | внутри |
+| Команда внедрения (интеграции, контур) | по договору | подрядчик |
+| Специалист по данным реестров | 20 % | внутри |
+
+**Трудозатраты подрядчика:** 90–140 чел.-дней разработки <span class="tag hypo">ГИПОТЕЗА</span> ·
+**Закупки:** лицензии модели в контуре, мощности аттестованного контура
+
+**Срок с момента старта:** пилот — 8 недель, первое решение по результатам — 12 недель
+
+<!-- Реплика (25 сек): Команда ролями: эксперт наполовину занят пилотом,
+интеграции делает подрядчик. Оценка трудозатрат — диапазоном, это гипотеза
+до обследования. -->
+</script>
+<script type="text/plain" class="vsrc" data-t="Инвестиционные показатели">
+![icon](../icons/svg/calculator.svg)
+
+## Инвестиционные показатели
+
+<div class="kpi"><b>+13,9 млн ₽</b><span>NPV за 3 года</span></div>
+<div class="kpi"><b>15 мес</b><span>окупаемость</span></div>
+<div class="kpi"><b>99 %</b><span>вероятность NPV > 0</span></div>
+
+| Сценарий | NPV, млн ₽ | Окупаемость |
+|---|---|---|
+| Консервативный (стресс) | −11,3 | не окупается |
+| Базовый | +13,9 | 15 мес |
+| Оптимистичный | +58,7 | 5 мес |
+
+**Бюджет:** внедрение 12,0 млн ₽ · сопровождение 2,4 млн ₽/год · ставка 20 % <span class="tag hypo">ГИПОТЕЗА</span>
+
+Не окупается, если трудозатраты не опустятся ниже **46 ч** ·
+каждая цифра — из **finmodel.xlsx** (модель живыми формулами)
+
+<!-- Реплика (30 сек): Базовый сценарий окупается за 15 месяцев. Стресс-сценарий
+честно не окупается; вероятность такого исхода по пяти тысячам прогонов — около
+процента. Модель открыта: любую ячейку можно проследить до констант. -->
+</script>
+<script type="text/plain" class="vsrc" data-t="График NPV">
+![icon](../icons/svg/trending_up.svg)
+
+## График NPV
+
+![npv w:800](npv_payback_example.png)
+
+**Первый шаг:** до понедельника — встреча с владельцем реестра заявок, получить ответ,
+доступна ли выгрузка за 2024–2026 гг. · **Знает об этом:** руководитель управления
+
+<!-- Реплика (25 сек): Столбики — денежный поток по годам, линия — накопленный
+дисконтированный поток. Где линия пересекает ноль — там окупаемость, у нас это
+пятнадцатый месяц. Первый шаг — не «проработать вопрос», а получить конкретный
+ответ до понедельника. Прошу поддержать пилот. Спасибо. -->
+</script>
+              </div>
+              <p class="cap2"><b>Это настоящий рендер, не картинка-макет:</b> слайды собраны
+                пайплайном из <b>templates/deck_example.md</b> — marp + тема theme.css, график NPV —
+                finmodel.py, Гант на слайде «Ключевые фазы» — roadmap.py. Вкладка «MARP-код»
+                показывает исходник текущего слайда: презентация — это текст, который агент
+                пишет и правит как код.</p>
+              <p class="cap2"><b>Проверка прослеживаемости.</b> Последним действием агент выводит
+                таблицу «цифра на слайде → артефакт → метка достоверности». Если строка не сходится,
+                на слайде появилась цифра, которой нет в артефактах, — и это видно до защиты,
+                а не во время неё.</p>
+            </div>
+          </div>
+
+          <div class="done-when" style="margin-top:16px"><b>Готово, когда:</b> девять слайдов
+            собраны, у каждой цифры есть источник и метка, реплики написаны,
+            на слайде 9 — график NPV из финмодели.</div>
+        </div>
+      </details>
+
+      <details class="step">
+        <summary>
+          <div class="stepno">10</div>
+          <div class="stephead"><div class="t">Защита и перекрёстная экспертиза</div>
+            <div class="s">сессия С12 · разбор ведут сами участники</div></div>
+          <div class="art">A9</div>
+        </summary>
+        <div class="stepbody">
+          <p>Четыре минуты на доклад. Замечания коллег агент фиксирует <b>в момент обсуждения</b>
+            и тут же показывает, как правка отражается на модели и на слайдах. Это и есть
+            демонстрация рабочего цикла: решение обсуждается и пересчитывается за минуты.</p>
+          <div class="io">
+            <div class="iobox"><div class="k">на входе</div>
+              <div class="v"><span class="ac">A8</span> презентация — и замечания коллег,
+                надиктованные или вписанные по ходу обсуждения.</div>
+              <div class="q">«Оперблок считает, что сопровождение занижено:
+                у них выходило 25 %»</div></div>
+            <div class="ioarr"><svg aria-hidden="true"><use href="#ic-arrow"/></svg></div>
+            <div class="iobox out"><div class="k">на выходе</div>
+              <div class="v"><span class="ac">A9</span> <b>Протокол экспертизы</b> — замечания
+                по трём группам, пересчёт было/стало, обязательство недели +
+                обновлённые модель, слайды и дорожная карта v2</div></div>
+          </div>
+          <div class="label">промпт</div>
+          <div class="promptwrap">
+<pre class="prompt" id="p10">Веди протокол перекрёстной экспертизы во время защиты. Замечания я буду
+вписывать сообщениями — по ходу или списком после обсуждения. Работай в чате,
+где лежат финмодель и слайды шагов 7–8; если чат новый — сначала попроси
+меня их вставить.
+
+Фиксируй каждое замечание: [кто высказал | к какому слайду относится | суть
+одной строкой]. Записывай нейтрально: не защищай инициативу и не соглашайся
+автоматически.
+
+После обсуждения раздели замечания на три группы: ПРИНИМАЕМ (что именно
+меняется); ПРИНИМАЕМ С ОГОВОРКОЙ (что и при каком условии); НЕ ПРИНИМАЕМ
+(почему, со ссылкой на данные или границы инициативы).
+
+По принятым, затрагивающим цифры, ПЕРЕСЧИТАЙ модель и покажи было/стало:
+насколько изменились NPV и окупаемость. Выведи обновлённые тексты затронутых
+слайдов целиком.
+
+Зафиксируй обязательство первой недели: конкретное проверяемое действие
+до следующего понедельника и роль, которая о нём знает. «Поговорить» не годится.
+
+Обнови дорожную карту до версии v2: впиши обязательство первой недели в первый
+месяц и поправь пороги точек решения, если пересчёт их изменил.</pre>
+            <button class="copy" data-copy="#p10">Копировать</button>
+          </div>
+
+          <div class="label">как выглядит артефакт</div>
+          <div class="artifact">
+            <div class="bar"><i></i><b>A9 · Протокол перекрёстной экспертизы</b> · 7 замечаний</div>
+            <div class="doc">
+              <div class="verdicts">
+                <div class="verdict yes"><div class="h">принимаем · 3</div>
+                  <p>Сопровождение занижено: ставим 25 % вместо 15 %. Пилот расширяется
+                    с 60 до 90 заявок</p></div>
+                <div class="verdict maybe"><div class="h">с оговоркой · 2</div>
+                  <p>Экономию на возвратах учитываем только после того, как дирекция
+                    подтвердит текущую долю возвратов по своей выборке</p></div>
+                <div class="verdict no"><div class="h">не принимаем · 2</div>
+                  <p>Расширение на нетиповые заявки выходит за границы инициативы,
+                    зафиксированные в паспорте</p></div>
+              </div>
+              <p class="cap2" style="margin-top:14px"><b>Пересчёт на месте:</b>
+                NPV +6,1 → <b>+4,6 млн ₽</b>, окупаемость 17 → <b>18 мес</b>, вероятность
+                NPV &gt; 0 снизилась с 97 до 93 %. Слайды 8–9 обновлены.<br>
+                <b>Обязательство первой недели:</b> запросить у дирекции экспертизы выгрузку
+                по возвратам за 2025 год, до понедельника, знает руководитель дирекции.</p>
+            </div>
+          </div>
+
+          <div class="done-when" style="margin-top:16px"><b>Готово, когда:</b> замечания
+            классифицированы, модель пересчитана, слайды обновлены, обязательство первой недели
+            записано и внесено в дорожную карту v2.</div>
         </div>
       </details>
 
@@ -1436,6 +1619,44 @@ python3 templates/roadmap.py -o roadmap_gantt.png — впиши свои эта
 </footer>
 
 <script>
+// ── вьюер презентации ──────────────────────────────────────────
+(function(){
+  var v = document.getElementById('deckviewer');
+  if (!v) return;
+  var srcs = [].map.call(v.querySelectorAll('.vsrc'), function(t){
+    return {md: t.textContent.trim(), title: t.getAttribute('data-t')};
+  });
+  var n = srcs.length, cur = 0, mode = 'slide';
+  var img = document.getElementById('vimg'), code = document.getElementById('vcode'),
+      vn = document.getElementById('vn'), vt = document.getElementById('vtitle'),
+      dots = document.getElementById('vdots');
+  for (var i = 0; i < n; i++) (function(i){
+    var d = document.createElement('button');
+    d.className = 'vdot'; d.setAttribute('aria-label', 'Слайд ' + (i+1));
+    d.addEventListener('click', function(){ cur = i; render(); });
+    dots.appendChild(d);
+  })(i);
+  function pad(i){ return (i < 9 ? '0' : '') + (i + 1); }
+  function render(){
+    img.src = 'assets/deck/slide-' + pad(cur) + '.jpg';
+    img.alt = 'Слайд ' + (cur+1) + ' · ' + srcs[cur].title;
+    code.textContent = srcs[cur].md;
+    vn.textContent = cur + 1; vt.textContent = srcs[cur].title;
+    img.hidden = (mode !== 'slide'); code.hidden = (mode === 'slide');
+    [].forEach.call(dots.children, function(d, i){ d.classList.toggle('on', i === cur); });
+  }
+  document.getElementById('vprev').addEventListener('click', function(){ cur = (cur+n-1)%n; render(); });
+  document.getElementById('vnext').addEventListener('click', function(){ cur = (cur+1)%n; render(); });
+  [].forEach.call(v.querySelectorAll('.vtab'), function(b){
+    b.addEventListener('click', function(){
+      mode = b.getAttribute('data-mode');
+      [].forEach.call(v.querySelectorAll('.vtab'), function(x){ x.classList.toggle('on', x === b); });
+      render();
+    });
+  });
+  render();
+})();
+
 // ── копирование ────────────────────────────────────────────────
 document.querySelectorAll('button.copy').forEach(function(b){
   b.addEventListener('click', function(){
