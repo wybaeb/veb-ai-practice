@@ -347,7 +347,7 @@ A1 Карта инициатив
 [`templates/theme.css`](./templates/theme.css). Пример заполненной — [`templates/deck_example.md`](./templates/deck_example.md).
 Иконки — [`icons/`](./icons/), брендовый набор.
 
-Сборка: `npx @marp-team/marp-cli deck.md -o deck.pdf`. Если `npx` недоступен — отдай `.md`
+Сборка: `npx @marp-team/marp-cli deck.md -o deck.pdf --theme templates/theme.css`. Если `npx` недоступен — отдай `.md`
 и `.html`, участнику этого достаточно.
 
 **Структура защиты — девять слайдов, четыре минуты** (по шести типовым слайдам

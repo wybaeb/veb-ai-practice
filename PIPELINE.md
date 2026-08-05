@@ -535,7 +535,7 @@
 Если проверка недоступна (нет Pillow или Chrome) — проверь каждый слайд глазами.
 
 Затем собери PDF командой
-  npx @marp-team/marp-cli deck.md -o deck.pdf
+  npx @marp-team/marp-cli deck.md -o deck.pdf --theme templates/theme.css
 Если npx недоступен — отдай deck.md и deck.html и скажи, как собрать PDF позже.
 Затем покажи участнику ПРОВЕРКУ ПРОСЛЕЖИВАЕМОСТИ: таблица
 [цифра на слайде | из какого артефакта | метка достоверности].
