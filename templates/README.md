@@ -7,6 +7,7 @@
 |---|---|---|
 | [`initiative_passport.md`](./initiative_passport.md) | **A2** Паспорт инициативы | шаг 2 · сессия С6 |
 | [`canvas.md`](./canvas.md) | **A5** Холст инициативы, девять полей | шаг 5 · сессия С9 |
+| [`prompt_step5_canvas.md`](./prompt_step5_canvas.md) | промпт шага 5 в отдельном запуске → тот же **A5** | шаг 5, вне общего прогона |
 | [`admissibility.md`](./admissibility.md) | **A6** Заключение о допустимости | шаг 6 · сессия С11 |
 | [`finmodel.py`](./finmodel.py) | **A7** Финансовая модель, расчёт | шаг 7 · сессия С11 |
 | [`finmodel_xlsx.py`](./finmodel_xlsx.py) | **A7** Excel-книга модели с живыми формулами | шаг 7 · сессия С11 |
